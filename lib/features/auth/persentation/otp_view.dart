@@ -1,123 +1,173 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rafiq/core/di/dependency_injection.dart';
 import 'package:rafiq/core/routes/app_routes.dart';
 import 'package:rafiq/core/thieming/app_colors.dart';
 import 'package:rafiq/core/thieming/app_styles.dart';
+import 'package:rafiq/core/widgets/custom_appbar.dart';
 import 'package:rafiq/core/widgets/custom_buttom.dart';
+import 'package:rafiq/features/auth/persentation/logic/forget_pass_cubit.dart';
+import 'package:rafiq/features/auth/persentation/logic/forget_pass_state.dart';
+
 
 class OtpView extends StatefulWidget {
-  const OtpView({super.key});
+  final String phoneNumber; // بنستلم الرقم من الشاشة اللي فاتت
+
+  const OtpView({super.key, required this.phoneNumber});
 
   @override
   State<OtpView> createState() => _OtpViewState();
 }
 
 class _OtpViewState extends State<OtpView> {
+  // 1. عملنا قائمة من الـ Controllers لـ 4 خانات
+  final List<TextEditingController> _controllers = List.generate(4, (_) => TextEditingController());
+  
+  // ميثود بتجمع الأرقام من الـ 4 خانات وتحولهم لـ String واحد
+  String get otpCode => _controllers.map((controller) => controller.text).join();
+
+  @override
+  void dispose() {
+    // مهم جداً نقفل الـ Controllers عشان الرام
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.babypink,
-      resizeToAvoidBottomInset: true,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 20.h),
-                child: IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: Icon(Icons.arrow_back, color: Colors.black, size: 28.sp),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
-              ),
+    return BlocProvider(
+      create: (context) => getIt<ForgetPasswordCubit>(),
+      child: Scaffold(
+        backgroundColor: AppColors.babypink,
+              appBar:  CustomAppBar(title: "Enter your OTP code"),
 
-              30.verticalSpace,
-
-                  Center(
-                    child: Text(
-                      "Enter your OTP code",
-                      style: AppTextStyles.extrabold28cairo.copyWith(
-                        color: AppColors.primaryNormal,    
+        resizeToAvoidBottomInset: true,
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeader(),
+                  35.verticalSpace,
+                  
+                  // 2. عرض خانات الـ OTP
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(
+                      4,
+                      (index) => _buildOtpBox(
+                        index: index,
+                        first: index == 0,
+                        last: index == 3,
                       ),
                     ),
                   ),
 
-              20.verticalSpace,
+                  35.verticalSpace,
 
-Text(
-                      "We just sent you a messege , please open it and enter the OTP code in that messege below to identify your account.",
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.regular20cairo.copyWith(
-                        color: AppColors.grey,    
-                        height: 1.5,
-                      ),
-                    ),
-              35.verticalSpace,
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildOtpBox(first: true, last: false),
-                  _buildOtpBox(first: false, last: false),
-                  _buildOtpBox(first: false, last: false),
-                  _buildOtpBox(first: false, last: true),
+                  // 3. التعامل مع الـ Logic عن طريق BlocConsumer
+                  BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
+                    listener: (context, state) {
+                      if (state is OtpSuccess) {
+                        context.push(AppRouter.createNewPasswordView);
+                      } else if (state is OtpError) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(state.message),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      return CustomButton(
+                        text: state is OtpLoading ? 'Verifying...' : 'Confirm',
+                        onPressed: state is OtpLoading
+                            ? null
+                            : () {
+                                if (otpCode.length == 4) {
+                                  context.read<ForgetPasswordCubit>().verifyOtp(
+                                        phone: widget.phoneNumber,
+                                        otp: otpCode,
+                                      );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text("Please enter the full code")),
+                                  );
+                                }
+                              },
+                        backgroundColor: AppColors.primaryNormalActive,
+                        textColor: Colors.white,
+                        height: 48.h,
+                      );
+                    },
+                  ),
                 ],
               ),
-
-              35.verticalSpace,
-
-              CustomButton(
-                text: 'Confirm',
-                onPressed: () {
-                                           context.push(AppRouter.createNewPasswordView);
-
-                },
-                backgroundColor: AppColors.primaryNormalActive,
-                textColor: Colors.white,
-                height: 48.h,
-              ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildOtpBox({required bool first, required bool last}) {
+  // --- مكونات الـ UI المنفصلة ---
+
+
+  Widget _buildHeader() {
+    return Column(
+      children: [
+        Text(
+          "We just sent you a message to ${widget.phoneNumber}, please enter the OTP code below to identify your account.",
+          textAlign: TextAlign.center,
+          style: AppTextStyles.regular16cairo.copyWith(
+            color: AppColors.grey,
+            height: 1.5,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOtpBox({required int index, required bool first, required bool last}) {
     return Container(
       height: 70.h,
       width: 64.w,
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.primaryNormal, width: 1),
         borderRadius: BorderRadius.circular(12.r),
+        color: Colors.white, // خليتها أبيض عشان الأرقام تبان
       ),
       child: TextField(
-        autofocus: true,
+        controller: _controllers[index],
+        autofocus: first, // أول مربع يفتح الكيبورد لوحده
         onChanged: (value) {
-          if (value.length == 1 && last == false) {
-            FocusScope.of(context).nextFocus(); 
+          if (value.length == 1 && !last) {
+            FocusScope.of(context).nextFocus(); // انقل للي بعده
           }
-          if (value.isEmpty && first == false) {
-            FocusScope.of(context).previousFocus(); 
+          if (value.isEmpty && !first) {
+            FocusScope.of(context).previousFocus(); // ارجع للي قبله لو مسحت
           }
         },
         showCursor: false,
-        readOnly: false,
         textAlign: TextAlign.center,
         style: AppTextStyles.bold16cairo.copyWith(fontSize: 24.sp),
         keyboardType: TextInputType.number,
         inputFormatters: [
-          LengthLimitingTextInputFormatter(1), 
-          FilteringTextInputFormatter.digitsOnly, 
+          LengthLimitingTextInputFormatter(1),
+          FilteringTextInputFormatter.digitsOnly,
         ],
         decoration: const InputDecoration(
           border: InputBorder.none,
-          hintText: "-", 
+          hintText: "-",
+          hintStyle: TextStyle(color: Colors.grey),
         ),
       ),
     );

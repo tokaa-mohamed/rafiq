@@ -12,14 +12,42 @@ class AppColors{
   static const Color primaryDarkHover= Color(0xFF6D791F);
   static const Color primaryDarkActive= Color(0xFF515A17);
   static const Color primaryDarker= Color(0xFF3F4612);
+  static const Color lightYellow= Color(0xFFB5CD2D);
+  
+  
+
   static const Color grey= Color(0xFF868686);
   static const Color black= Color(0xFF040F0F);
   static const Color grey1= Color(0xFFA3A3A3);
   static const Color grey2= Color(0xFF252528);
+  static const Color grey3= Color(0xFF64748B);
+  static const Color ligthgrey= Color(0xFFE2E8F0);
+
+  
 
   
   static const Color babypink= Color(0xFFFFFCF8);
   static const Color black1= Color(0xFF111111);
+  static const Color black2= Color(0xFF1E293B);
+  
+  static const Color darkblack= Color(0xFF0F172A);
+  static const Color grey4= Color(0xFF334155);
+  static const Color grey5= Color(0xFFF1F5F9);
+  static const Color grey6= Color(0xFF777964);
+  static const Color grey7= Color(0xFF8C8C8C);
+  static const Color grey8= Color(0xFF475569);
+  static const Color grey9= Color(0xFF6B7280);
+  static const Color grey10= Color(0xFF94A3B8);
+  static const Color grey11= Color(0xFFF8FAFC);
+
+  
+
+  
+
+  
+
+  
+  
 
 
 
