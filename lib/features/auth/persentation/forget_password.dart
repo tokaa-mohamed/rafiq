@@ -72,6 +72,7 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
                       },
                       builder: (context, state) {
                         return CustomButton(
+                          borderRadius: 10,
                           text: state is ForgetPasswordLoading ? 'Sending...' : 'Send',
                           onPressed: state is ForgetPasswordLoading 
                               ? null 
@@ -106,8 +107,7 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
         18.verticalSpace,
         Center(
           child: Text(
-            "Please enter your Phone Number. You will receive an OTP code to create a new password via Phone",
-            textAlign: TextAlign.center,
+"Please enter your Phone Number. You\nwill receive an OTP code to create a new password\nvia Phone",            textAlign: TextAlign.center,
             style: AppTextStyles.regular16cairo.copyWith(color: AppColors.grey1), // قللت الحجم شوية عشان الـ UI
           ),
         ),

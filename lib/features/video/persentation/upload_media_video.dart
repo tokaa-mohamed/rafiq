@@ -2,34 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rafiq/core/routes/app_routes.dart'; 
+import 'package:rafiq/core/routes/app_routes.dart';
+import 'package:rafiq/core/thieming/app_colors.dart';
+import 'package:rafiq/core/thieming/app_styles.dart'; 
 
-class UploadMediaView extends StatefulWidget {
-  const UploadMediaView({super.key});
+class UploadVideoMediaView extends StatefulWidget {
+  const UploadVideoMediaView({super.key});
 
   @override
-  State<UploadMediaView> createState() => _UploadMediaViewState();
+  State<UploadVideoMediaView> createState() => _UploadMediaViewState();
 }
 
-class _UploadMediaViewState extends State<UploadMediaView> {
+class _UploadMediaViewState extends State<UploadVideoMediaView> {
   final ImagePicker _picker = ImagePicker();
+  XFile? _selectedVideo; // تخزين الفيديو المختار
 
+  // دالة اختيار الفيديو من الـ Gallery
   Future<void> _pickVideo() async {
-    // بنختار الفيديو كـ XFile وده المتوافق مع الويب والموبايل
     final XFile? video = await _picker.pickVideo(
       source: ImageSource.gallery,
       maxDuration: const Duration(minutes: 2), 
     );
 
     if (video != null) {
+      setState(() {
+        _selectedVideo = video;
+      });
+      
+      // إذا عوزاه أول ما يختار الفيديو ينقله تلقائياً للشاشة الثانية:
       if (!mounted) return;
+      _navigateToCreatePost();
+    }
+  }
 
-      // التعديل الجوهري هنا:
-      // 1. شيلنا Navigator.push واستخدمنا context.push الخاصة بـ GoRouter
-      // 2. شيلنا File(video.path) وبعتنا الـ video (XFile) زي ما هو
+  // دالة التنقل المباشر لشاشة الـ Create Post وتمرير الفيديو
+  void _navigateToCreatePost() {
+    if (_selectedVideo != null) {
       context.push(
-        AppRouter.newReelView,
-        extra: video, 
+        AppRouter.createPostView,
+        extra: _selectedVideo, 
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a video first")),
       );
     }
   }
@@ -40,18 +55,17 @@ class _UploadMediaViewState extends State<UploadMediaView> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: const CloseButton(color: Colors.black),
-        title: const Text("Upload Media", style: TextStyle(color: Colors.black)),
+        title:  Text("Upload Media", style: AppTextStyles.bold24cairo.copyWith(color: AppColors.darkblack)),
         centerTitle: true,
         actions: [
           TextButton(
-            onPressed: _pickVideo, 
+            onPressed: _selectedVideo != null ? _navigateToCreatePost : null, 
             child: Text(
               "Next", 
-              style: TextStyle(
-                color: const Color(0xFF96A53A), 
-                fontWeight: FontWeight.bold, 
-                fontSize: 16.sp,
-              ),
+              style:
+              AppTextStyles.bold20cairo.copyWith(color: _selectedVideo != null ? AppColors.primaryNormal : Colors.grey)
+
+
             ),
           ),
         ],
@@ -62,14 +76,25 @@ class _UploadMediaViewState extends State<UploadMediaView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.video_library_outlined, size: 80.sp, color: Colors.grey),
+            Icon(
+              _selectedVideo != null ? Icons.video_file_rounded : Icons.video_library_outlined, 
+              size: 80.sp, 
+              color: _selectedVideo != null ? const Color(0xFF96A53A) : Colors.grey,
+            ),
             20.verticalSpace,
+            if (_selectedVideo != null) ...[
+              Text(
+                "Video Selected Successfully!",
+                style: TextStyle(fontSize: 14.sp, color: Colors.green, fontWeight: FontWeight.bold),
+              ),
+              10.verticalSpace,
+            ],
             ElevatedButton(
               onPressed: _pickVideo,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF96A53A),
               ),
-              child: const Text("Select Video from Gallery"),
+              child: Text(_selectedVideo != null ? "Change Video" : "Select Video from Gallery"),
             ),
           ],
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rafiq/core/thieming/app_colors.dart';
 import 'package:rafiq/core/thieming/app_styles.dart';
 import 'package:rafiq/features/video/domain/entities/age_statge_entity.dart';
 import 'package:rafiq/features/video/persentation/video_list_view.dart';
@@ -66,10 +67,10 @@ class AgeStagesView extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: AppColors.darkblack),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text("Parenting", style: AppTextStyles.bold16cairo.copyWith(color: Colors.black)),
+        title: Text("Parenting", style: AppTextStyles.bold24cairo.copyWith(color: AppColors.darkblack)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -80,12 +81,12 @@ class AgeStagesView extends StatelessWidget {
             20.verticalSpace,
             Text(
               "Parenting Age Stages for Rafiq",
-              style: AppTextStyles.bold16cairo.copyWith(color: const Color(0xFF1D2633)),
+              style: AppTextStyles.bold20cairo.copyWith(color: AppColors.darkblack),
             ),
             8.verticalSpace,
             Text(
               "Guided milestones for every developmental phase.",
-              style: AppTextStyles.regular16cairo.copyWith(color: Colors.grey),
+              style: AppTextStyles.regular14cairo.copyWith(color: AppColors.grey8),
             ),
             24.verticalSpace,
             // عرض الكروت

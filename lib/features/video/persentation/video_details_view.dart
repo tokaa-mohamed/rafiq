@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rafiq/core/thieming/app_colors.dart';
 import 'package:video_player/video_player.dart';
 import 'package:rafiq/core/thieming/app_styles.dart';
 import '../domain/entities/video_entity.dart';
@@ -52,12 +53,12 @@ class _VideoDetailsViewState extends State<VideoDetailsView> {
                 children: [
                   Text(
                     widget.video.title,
-                    style: AppTextStyles.bold16cairo.copyWith(color: Colors.black),
+                    style: AppTextStyles.bold24cairo.copyWith(color: AppColors.darkblack),
                   ),
                   10.verticalSpace,
                   Text(
                     widget.video.description,
-                    style: AppTextStyles.regular14cairo.copyWith(color: Colors.grey[700]),
+                    style: AppTextStyles.regular14cairo.copyWith(color: AppColors.grey8),
                   ),
                   
                   24.verticalSpace,
@@ -98,16 +99,16 @@ class _VideoDetailsViewState extends State<VideoDetailsView> {
       elevation: 0,
       centerTitle: true,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.black),
+        icon: const Icon(Icons.arrow_back, color: AppColors.darkblack),
         onPressed: () => Navigator.pop(context),
       ),
       title: Text(
         "Video Details",
-        style: AppTextStyles.bold16cairo.copyWith(color: Colors.black),
+        style: AppTextStyles.bold24cairo.copyWith(color: AppColors.darkblack),
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.share_outlined, color: Colors.black),
+          icon: const Icon(Icons.share_outlined, color: AppColors.darkblack),
           onPressed: () {},
         ),
       ],
@@ -177,25 +178,36 @@ class _VideoDetailsViewState extends State<VideoDetailsView> {
     );
   }
 
-  Widget _buildStatItem(IconData icon, String val) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF1F4E8),
-        borderRadius: BorderRadius.circular(25.r),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 18.sp, color: const Color(0xFF9DB454)),
-          8.horizontalSpace,
-          Text(
-            val,
-            style: AppTextStyles.bold16cairo.copyWith(color: Colors.black),
+Widget _buildStatItem(IconData icon, String val) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: EdgeInsets.all(8.w),
+          decoration: const BoxDecoration(
+            color: Color(0xFFF1F4E8), 
+                        shape: BoxShape.circle,
           ),
-        ],
-      ),
-    );
-  }
+          child: Icon(
+            icon,
+            size: 20.sp,
+            color:   const Color(0xFF9DB454), 
+          ),
+        ),
+        10.horizontalSpace,
+        Text(
+          val,
+          style: AppTextStyles.bold16cairo.copyWith(
+            color: const Color(0xFF2D3142), 
+                     fontSize: 14.sp,
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildRelatedVideosList() {
     return SizedBox(

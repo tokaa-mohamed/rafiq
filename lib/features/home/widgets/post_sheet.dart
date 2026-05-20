@@ -18,14 +18,14 @@ class _CreatePostSheetState extends State<CreatePostSheet> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent, // عشان مياخدش خلفية الـ Dialog الافتراضية
+      color: Colors.transparent, 
       child: Container(
-        width: 0.9.sw, // بياخد 90% من عرض الشاشة
+        width: 0.9.sw, 
         padding: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(24.r), // مدور من كل الزوايا
-          boxShadow: [
+          borderRadius: BorderRadius.circular(24.r), 
+                    boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
               blurRadius: 20,
@@ -34,10 +34,9 @@ class _CreatePostSheetState extends State<CreatePostSheet> {
           ],
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min, // بيكبر على قد المحتوى اللي جواه
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min, 
+                    crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // الهيدر: العنوان وزرار الإغلاق
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -52,9 +51,8 @@ class _CreatePostSheetState extends State<CreatePostSheet> {
                 ),
               ],
             ),
-            const Divider(height: 20), // خط فاصل رفيع
+            const Divider(height: 20), 
             
-            // بيانات الأدمن (رفيق)
             Row(
               children: [
 CircleAvatar(

@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rafiq/core/di/dependency_injection.dart';
+import 'package:rafiq/features/auth/persentation/logic/forget_pass_cubit.dart';
 
 // Imports
 import 'package:rafiq/features/auth/persentation/logic/signin_cubit.dart';
+import 'package:rafiq/features/auth/persentation/logic/signup_cubit.dart';
 import 'package:rafiq/features/auth/persentation/signin_screen.dart';
 import 'package:rafiq/features/auth/persentation/signup_screen.dart';
 import 'package:rafiq/features/auth/persentation/welcome_screen.dart';
@@ -18,7 +20,9 @@ import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/chatb
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/chatbot_cubit.dart';
 import 'package:rafiq/features/home/persentation/home_view.dart';
 import 'package:rafiq/features/home/widgets/main_layout.dart';
-import 'package:rafiq/features/home/widgets/post_sheet.dart'; 
+import 'package:rafiq/features/home/widgets/post_sheet.dart';
+import 'package:rafiq/features/video/persentation/logic/admin_video_cubit.dart';
+import 'package:rafiq/features/video/persentation/upload_media_video.dart'; 
 import 'package:rafiq/features/video/persentation/video_view.dart';
 import 'package:rafiq/features/reels/persentation/reels_view.dart';
 import 'package:rafiq/features/auth/persentation/profile_view.dart';
@@ -60,6 +64,7 @@ abstract class AppRouter {
   static const createPostSheet = '/CreatePostSheet';
   static const chatPage = '/ChatPage';
   static const bookSessionScreen = '/BookSessionScreen';
+  static const uploadVideoMediaView = '/UploadVideoMediaView';
 
   
   
@@ -80,27 +85,45 @@ abstract class AppRouter {
           child: const LoginScreen(),
         ),
       ),
-      GoRoute(path: signUp, builder: (context, state) => const SignupScreen()),
-      GoRoute(path: forgetPassword, builder: (context, state) => const ForgetPasswordView()),
-      GoRoute(path: otpView, builder: (context, state) => const OtpView(phoneNumber: '')),
-      GoRoute(path: createNewPasswordView, builder: (context, state) => const CreateNewPasswordView(phoneNumber: '')),
-      GoRoute(path: successConfirmationView, builder: (context, state) => const SuccessConfirmationView()),
+GoRoute(
+  path: signUp,
+  builder: (context, state) => BlocProvider(
+    create: (context) => getIt<SignupCubit>(), 
+    child: const SignupScreen(),
+  ),
+),    
+GoRoute(
+  path: forgetPassword,
+  builder: (context, state) => BlocProvider(
+    create: (context) => getIt<ForgetPasswordCubit>(),
+    child: const ForgetPasswordView(),
+  ),
+),
+
+      GoRoute(path: otpView, builder: (context, state) =>
+       const OtpView(phoneNumber: '')),
+      GoRoute(path: createNewPasswordView, builder: (context, state)
+       => const CreateNewPasswordView(phoneNumber: '')),
+      GoRoute(path: successConfirmationView, builder: (context, state)
+       => const SuccessConfirmationView()),
 
       ShellRoute(
         builder: (context, state, child) {
           return MainLayout(child: child); 
         },
         routes: [
-          GoRoute(path: homeView, builder: (context, state) => const HomeView()),
-          GoRoute(path: educationalVideosView, builder: (context, state) => const EducationalVideosView()),
-          GoRoute(path: '/ChatPage', builder: (context, state) =>  BlocProvider(
+          GoRoute(path: homeView, builder: (context, state)
+           => const HomeView()),
+          GoRoute(path: educationalVideosView,
+           builder: (context, state) => const EducationalVideosView()),
+          GoRoute(path: '/ChatPage', builder: 
+          (context, state) =>  BlocProvider(
   create: (_) => getIt<ChatBloc>(), 
   child:  ChatPage(),
 )),
 GoRoute(
   path: reelsView,
   builder: (context, state) {
-    // بناخد الـ video من الـ extra لو موجود
     final video = state.extra as XFile?; 
     return ReelsView(
       isAdmin: true, // أو حسب اللوجيك عندك
@@ -128,15 +151,39 @@ GoRoute(
           return EditProfileView(user: profile);
         },
       ),
-      GoRoute(path: ageStagesView, builder: (context, state) => const AgeStagesView()),
-      GoRoute(path: videosListView, builder: (context, state) => const VideosListView(stageTitle: '')),
-      GoRoute(path: parentingAdminView, builder: (context, state) => const ParentingAdminView()),
-      GoRoute(path: createPostView, builder: (context, state) => const CreatePostView()),
-      GoRoute(path: commentsView, builder: (context, state) => const CommentsView(comments: [])),
-      GoRoute(path: uploadMediaView, builder: (context, state) => const UploadMediaView()),
+      GoRoute(path: ageStagesView, builder: 
+      (context, state) => const AgeStagesView()),
+      GoRoute(path: videosListView, builder: 
+      (context, state) => const VideosListView(stageTitle: '')),
+      GoRoute(path: commentsView, builder: 
+      (context, state) => const CommentsView(comments: [])),
+      GoRoute(path: uploadMediaView, builder: 
+      (context, state) => const UploadMediaView()),
+
+      GoRoute(path: uploadVideoMediaView,
+       builder: (context, state) => const UploadVideoMediaView()),
+      
       GoRoute(path: createPostSheet, builder: (context, state) => const CreatePostSheet()),
 
-      
+GoRoute(
+  path: parentingAdminView,
+  builder: (context, state) => BlocProvider(
+    create: (context) => getIt<AdminVideoCubit>()..fetchAdminVideos(),
+    child: const ParentingAdminView(),
+  ),
+),
+
+GoRoute(
+  path: AppRouter.createPostView, // تأكدي من مطابقة اسم المتغير عندك
+  builder: (context, state) {
+    final videoFile = state.extra as XFile;
+    return BlocProvider.value(
+      value: getIt<AdminVideoCubit>(), // أو الـ instance الحالية للكوبيت
+      child: CreatePostView(videoFile: videoFile),
+    );
+  },
+),
+
 GoRoute(
   path: newReelView,
   builder: (context, state) {

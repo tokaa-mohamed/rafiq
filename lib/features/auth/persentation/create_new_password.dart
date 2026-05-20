@@ -89,6 +89,8 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                       },
                       builder: (context, state) {
                         return CustomButton(
+                           borderRadius: 10,
+
                           text: state is ResetPasswordLoading ? 'Saving...' : 'Confirm',
                           onPressed: state is ResetPasswordLoading 
                             ? null 

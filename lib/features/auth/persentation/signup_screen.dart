@@ -72,8 +72,10 @@ class _SignupScreenState extends State<SignupScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  
+                  SizedBox(height: 30.h,),
                   _buildLabel('Full Name'),
+                                    SizedBox(height: 15.h,),
+
                   AppTextFormField(
                     hintText: 'Toka Mohamed',
                     controller: fullNameController,
@@ -82,7 +84,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     validator: (value) => (value == null || value.isEmpty) ? 'Required' : null,
                   ),
 
+                                                      SizedBox(height: 15.h,),
+
+
                   _buildLabel('Phone Number'),
+                                                                        SizedBox(height: 15.h,),
+
                   AppTextFormField(
                     hintText: '01090895795',
                     controller: phoneController,
@@ -90,8 +97,11 @@ class _SignupScreenState extends State<SignupScreen> {
                     suffixIcon: const Icon(Icons.phone_outlined, color: AppColors.secondaryLightactive),
                     validator: (value) => (value == null || value.isEmpty) ? 'Required' : null,
                   ),
+                                                      SizedBox(height: 15.h,),
 
                   _buildLabel('Password'),
+                                                                        SizedBox(height: 15.h,),
+
                   ValueListenableBuilder(
                     valueListenable: isPasswordObscure,
                     builder: (context, obscure, _) {
@@ -109,8 +119,11 @@ class _SignupScreenState extends State<SignupScreen> {
                       );
                     },
                   ),
+                                                      SizedBox(height: 15.h,),
 
                   _buildLabel('Confirm Password'),
+                                                                        SizedBox(height: 15.h,),
+
                   ValueListenableBuilder(
                     valueListenable: isConfirmPasswordObscure,
                     builder: (context, obscure, _) {
@@ -129,7 +142,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     },
                   ),
 
-                  20.verticalSpace,
+                  30.verticalSpace,
                   
                   // ✅ الـ BlocConsumer للتعامل مع حالات الـ Signup
                   BlocConsumer<SignupCubit, SignupState>(

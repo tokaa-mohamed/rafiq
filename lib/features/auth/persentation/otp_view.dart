@@ -54,6 +54,7 @@ class _OtpViewState extends State<OtpView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  
                   _buildHeader(),
                   35.verticalSpace,
                   
@@ -88,6 +89,7 @@ class _OtpViewState extends State<OtpView> {
                     },
                     builder: (context, state) {
                       return CustomButton(
+                        borderRadius: 10,
                         text: state is OtpLoading ? 'Verifying...' : 'Confirm',
                         onPressed: state is OtpLoading
                             ? null
@@ -125,7 +127,7 @@ class _OtpViewState extends State<OtpView> {
     return Column(
       children: [
         Text(
-          "We just sent you a message to ${widget.phoneNumber}, please enter the OTP code below to identify your account.",
+          "We just sent you a message to ${widget.phoneNumber},\nplease enter the OTP code below to identify your account.",
           textAlign: TextAlign.center,
           style: AppTextStyles.regular16cairo.copyWith(
             color: AppColors.grey,

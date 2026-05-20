@@ -1,0 +1,44 @@
+name: Flutter CI
+
+# 1. حددنا الـ Triggers (السيستم يشتغل إمتى)
+on:
+  push:
+    branches: [ main, develop ] # يشتغل لما نرفع على المين أو الديفيلوب
+  pull_request:
+    branches: [ main, develop ] # أو لما حد يعمل طلب دمج
+
+jobs:
+  build:
+    # الـ Server اللي جيتهاب هيفتحلنا عليه الأبلكيشن عشان يجربه
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. يسحب الكود من الجيتهاب
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # 2. يسطب الجافا (مهمة عشان الفلاتر والأندرويد)
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+
+    # 3. يسطب الفلاتر نفسه على السيرفر
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.22.0' # حطي إصدار الفلاتر اللي شغالين بيه في رفيق
+        channel: 'stable'
+
+    # 4. ينزل الـ Dependencies
+    - name: Install dependencies
+      run: flutter pub get
+
+    # 5. يعمل تشيك على نظافة الكود (Static Analysis)
+    - name: Analyze code
+      run: flutter analyze
+
+    # 6. يشغل الـ Tests (لو مش كاتبين تستس تقدري تشيلي السطر ده أو تسيبيه هيديكي pass عادي)
+    - name: Run tests
+      run: flutter test

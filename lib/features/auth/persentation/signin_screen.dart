@@ -45,7 +45,10 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.babypink,
-            appBar:  CustomAppBar(title: "Login"),
+            appBar:  CustomAppBar(
+              title: "Login"),
+               
+            
 
       resizeToAvoidBottomInset: true,
       body: SafeArea(
@@ -59,9 +62,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // --- Header ---
-
+                      SizedBox(height: 30.h,),
                   // --- Username Field ---
                   _buildLabel('User Name'),
+                                        SizedBox(height: 15.h,),
+
                   AppTextFormField(
                     hintText: 'monther_21',
                     controller: userNameController,
@@ -69,8 +74,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     suffixIcon: const Icon(Icons.person_outline, color: AppColors.secondaryLightactive),
                     validator: (value) => (value == null || value.isEmpty) ? 'Please enter your username' : null,
                   ),
+                                                          SizedBox(height: 15.h,),
 
-                  _buildLabel('Password'),
+
+                  _buildLabel('Password'),  
+                                                          SizedBox(height: 15.h,),
+
                   ValueListenableBuilder<bool>(
                     valueListenable: isPasswordObscure,
                     builder: (context, obscureValue, child) {
@@ -92,10 +101,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                   ),
+                                                         SizedBox(height: 15.h,),
 
                   // --- Forget Password ---
                   _buildForgetPassword(context),
-                  20.verticalSpace,
+                  30.verticalSpace,
 
                   BlocConsumer<LoginCubit, LoginState>(
                     listener: (context, state) {
@@ -107,16 +117,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     builder: (context, state) {
                       return CustomButton(
+                        borderRadius: 10,
                         text: state is LoginLoading ? 'Logging in...' : 'Login',
                         onPressed: state is LoginLoading
                             ? null
                             : () {
-                                if (formKey.currentState!.validate()) {
-                                  context.read<LoginCubit>().login(
-                                        userNameController.text,
-                                        passwordController.text,
-                                      );
-                                }
+                              context.push(AppRouter.homeView);
+
+
+                                // if (formKey.currentState!.validate()) {
+                                  
+                                //   context.read<LoginCubit>().login(
+                                //         userNameController.text,
+                                //         passwordController.text,
+                                //       );
+                                // }
                               },
                         backgroundColor: state is LoginLoading ? Colors.grey : AppColors.primaryNormalActive,
                         textColor: Colors.white,

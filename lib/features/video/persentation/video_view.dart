@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rafiq/core/di/dependency_injection.dart';
 import 'package:rafiq/core/thieming/app_colors.dart';
 import 'package:rafiq/core/thieming/app_styles.dart';
+import 'package:rafiq/features/video/persentation/admin_video_view.dart';
 import 'package:rafiq/features/video/persentation/age_stage_view.dart';
 import 'package:rafiq/features/video/persentation/logic/video_card_cubit.dart';
 import 'package:rafiq/features/video/persentation/logic/video_card_state.dart';
@@ -48,12 +49,12 @@ class EducationalVideosView extends StatelessWidget {
       elevation: 0,
       centerTitle: true,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.black),
+        icon: const Icon(Icons.arrow_back, color: AppColors.darkblack),
         onPressed: () => Navigator.pop(context),
       ),
       title: Text(
         "Educational Videos",
-        style: AppTextStyles.bold16cairo.copyWith(color: Colors.black),
+        style: AppTextStyles.bold24cairo.copyWith(color: AppColors.darkblack),
       ),
     );
   }
