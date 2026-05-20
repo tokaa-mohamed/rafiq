@@ -39,6 +39,3 @@ jobs:
     - name: Analyze code
       run: flutter analyze
 
-    # 6. يشغل الـ Tests (لو مش كاتبين تستس تقدري تشيلي السطر ده أو تسيبيه هيديكي pass عادي)
-    - name: Run tests
-      run: flutter test

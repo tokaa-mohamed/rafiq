@@ -5,7 +5,7 @@ import 'package:rafiq/core/thieming/app_colors.dart';
 import 'package:rafiq/core/thieming/app_styles.dart';
 import 'package:rafiq/core/widgets/custom_buttom.dart';
 import 'package:rafiq/features/chatbot_and_assessment/domain/entities/chat_entity.dart';
-import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/Assessment_into.dart';
+import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/assessment_into.dart';
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/chatbot_cubit.dart';
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/chatbot_states.dart';
 

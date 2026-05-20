@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:rafiq/core/errors/error_handling.dart';
-import 'package:rafiq/core/networking/Api_intersectors.dart';
+import 'package:rafiq/core/networking/api_intersectors.dart';
 import 'api_consumer.dart';
 
 class DioConsumer extends ApiConsumer {

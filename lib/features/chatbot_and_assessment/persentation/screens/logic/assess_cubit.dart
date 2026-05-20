@@ -1,5 +1,5 @@
 // features/assessment/presentation/cubit/assessment_cubit.dart
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rafiq/features/chatbot_and_assessment/domain/entities/assessment_q.dart';
 import 'package:rafiq/features/chatbot_and_assessment/domain/use_cases/get_assessment.dart';
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/assess_state.dart';

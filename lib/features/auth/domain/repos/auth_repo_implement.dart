@@ -1,5 +1,5 @@
 import 'package:rafiq/core/errors/error_handling.dart';
-import 'package:rafiq/core/networking/Api_consumer.dart';
+import 'package:rafiq/core/networking/api_consumer.dart';
 import 'package:rafiq/features/auth/data/repos/user_model.dart';
 import 'package:rafiq/features/auth/domain/entities/sign_up_entity.dart';
 import 'package:rafiq/features/auth/domain/entities/user_entity.dart';

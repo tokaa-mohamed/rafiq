@@ -5,7 +5,6 @@ import 'package:rafiq/core/thieming/app_colors.dart';
 import 'package:rafiq/core/thieming/app_styles.dart';
 import 'package:rafiq/core/widgets/custom_buttom.dart'; // الـ Widget بتاعتك
 import 'package:rafiq/features/book_session/persentation/screens/book_session.dart';
-import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/Assessment_QS.dart';
 
 class AssessmentIntroPage extends StatefulWidget {
   const AssessmentIntroPage({super.key});

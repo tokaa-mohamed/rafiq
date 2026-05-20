@@ -9,7 +9,7 @@ import 'package:rafiq/core/thieming/app_colors.dart';
 import 'package:rafiq/features/video/domain/entities/video_entity.dart';
 import 'package:rafiq/features/video/persentation/logic/admin_video_cubit.dart';
 import 'package:rafiq/features/video/persentation/logic/admin_video_state.dart';
-import 'package:rafiq/features/video/persentation/widgets/custom_category_tabBar.dart';
+import 'package:rafiq/features/video/persentation/widgets/custom_category_tabbar.dart';
 
 class ParentingAdminView extends StatelessWidget {
   const ParentingAdminView({super.key});
