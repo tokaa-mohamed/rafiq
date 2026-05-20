@@ -1,15 +1,13 @@
 name: Flutter CI
 
-# 1. حددنا الـ Triggers (السيستم يشتغل إمتى)
 on:
   push:
-    branches: [ main, develop ] # يشتغل لما نرفع على المين أو الديفيلوب
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main, develop ] # أو لما حد يعمل طلب دمج
+    branches: [ main, develop ]
 
 jobs:
   build:
-    # الـ Server اللي جيتهاب هيفتحلنا عليه الأبلكيشن عشان يجربه
     runs-on: ubuntu-latest
 
     steps:
@@ -28,12 +26,20 @@ jobs:
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.22.0' # حطي إصدار الفلاتر اللي شغالين بيه في رفيق
+        flutter-version: '3.22.0'
         channel: 'stable'
 
-    # 4. ينزل الـ Dependencies
+    # 4. ينزل الـ Packages
     - name: Install dependencies
       run: flutter pub get
 
-    # 5. يعمل تشيك على نظافة الكود (Static Analysis)
+    # 5. خطوة بناء نسخة الـ APK الحقيقية 🚀
+    - name: Build APK
+      run: flutter build apk --release
 
+    # 6. خطوة حفظ الـ APK على جيتهاب عشان تقدري تنزليه 📦
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: rafiq-app-release
+        path: build/app/outputs/flutter-apk/app-release.apk
