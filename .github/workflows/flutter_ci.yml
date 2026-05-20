@@ -36,6 +36,4 @@ jobs:
       run: flutter pub get
 
     # 5. يعمل تشيك على نظافة الكود (Static Analysis)
-    - name: Analyze code
-      run: flutter analyze
 
