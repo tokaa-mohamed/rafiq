@@ -35,8 +35,10 @@ jobs:
 
     # 5. خطوة بناء نسخة الـ APK الحقيقية 🚀
     - name: Build APK
-      run: flutter build apk --release
-
+      run: |
+        flutter clean
+        flutter pub get
+        flutter build apk --release
     # 6. خطوة حفظ الـ APK على جيتهاب عشان تقدري تنزليه 📦
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
