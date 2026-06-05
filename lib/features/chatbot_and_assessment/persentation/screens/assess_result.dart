@@ -68,10 +68,9 @@ AssessmentChartsSection(
   confidence: result.confidenceScore,
   dimensions: result.dimensionScores,
 ),
-                SizedBox(height: 32.h), // مسافة كافية بدل الـ Spacer
+                SizedBox(height: 32.h), 
 
 
-                // 4. زرار الإنهاء
                 CustomButton(
                   text: 'Done',
                   height: 55.h,

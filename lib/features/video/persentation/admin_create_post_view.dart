@@ -34,9 +34,9 @@ class _CreatePostViewState extends State<CreatePostView> {
 
     _videoController = VideoPlayerController.networkUrl(videoUri)
       ..initialize().then((_) {
-        setState(() {}); // لتحديث الـ UI بعد تهيئة الفيديو
+        setState(() {});
         _videoController?.setLooping(true);
-        _videoController?.play(); // تشغيل الفيديو تلقائياً في المعاينة
+        _videoController?.play(); 
       }).catchError((error) {
         debugPrint("Video Player Error: $error");
       });
@@ -114,8 +114,8 @@ class _CreatePostViewState extends State<CreatePostView> {
       id: DateTime.now().toString(),
       title: _titleController.text,
       description: _descController.text,
-      videoUrl: widget.videoFile.path, // باصينا مسار الفيديو الحقيقي المختار هنا
-      thumbnailUrl: "assets/images/admin_placeholder.png", // هنا يمكنكِ توليد thumbnail لاحقاً
+      videoUrl: widget.videoFile.path,
+      thumbnailUrl: "assets/images/admin_placeholder.png", 
       duration: "02:00",
       views: "0",
       likes: "0",
@@ -137,7 +137,6 @@ class _CreatePostViewState extends State<CreatePostView> {
         borderRadius: BorderRadius.circular(16.r),
         child: Stack(
           children: [
-            // عرض الفيديو الحقيقي داخل الـ Container مع الحفاظ على الأبعاد وطريقة العرض المريحة للعين
             _videoController != null && _videoController!.value.isInitialized
                 ? SizedBox.expand(
                     child: FittedBox(
@@ -151,7 +150,6 @@ class _CreatePostViewState extends State<CreatePostView> {
                   )
                 : const Center(child: CircularProgressIndicator(color: AppColors.primaryNormal)),
             
-            // الطبقة العلوية للأيقونات كما هي في التصميم الأصلي
             Positioned(
               right: 12.w,
               bottom: 12.h,

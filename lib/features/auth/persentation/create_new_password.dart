@@ -14,9 +14,9 @@ import 'package:rafiq/features/auth/persentation/logic/forget_pass_cubit.dart';
 import 'package:rafiq/features/auth/persentation/logic/forget_pass_state.dart';
 
 class CreateNewPasswordView extends StatefulWidget {
-  final String phoneNumber; // بنستلمه عشان نبعته للـ API مع الباسورد الجديد
+  final String token;
 
-  const CreateNewPasswordView({super.key, required this.phoneNumber});
+  const CreateNewPasswordView({super.key,  required this.token});
 
   @override
   State<CreateNewPasswordView> createState() => _CreateNewPasswordViewState();
@@ -116,8 +116,9 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
   void _onConfirmPressed(BuildContext context) {
     if (formKey.currentState!.validate()) {
       context.read<ForgetPasswordCubit>().resetPassword(
-            phone: widget.phoneNumber,
-            password: passwordController.text,
+            token: widget.token,
+            
+              password: passwordController.text,
           );
     }
   }

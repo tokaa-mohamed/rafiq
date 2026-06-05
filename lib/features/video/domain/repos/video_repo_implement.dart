@@ -6,8 +6,6 @@ import '../../domain/repos/video_repo.dart';
 
 class VideoRepoImpl implements VideoRepo {
   
-  // قائمة Static لتعمل كقاعدة بيانات مؤقتة (Mock Database)
-  // هكذا عند الإضافة من شاشة الأدمن، ستتحدث البيانات في شاشة المستخدم تلقائياً
   static List<VideoEntity> _mockVideos = [
     VideoEntity(
       id: "1",

@@ -41,7 +41,6 @@ class _CommentsViewState extends State<CommentsView> {
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           children: [
-            // هيدر بسيط بدل الـ AppBar
             Padding(
               padding: EdgeInsets.all(16.w),
               child: Row(
@@ -78,7 +77,7 @@ class _CommentsViewState extends State<CommentsView> {
                 }
               },
             ),
-            10.verticalSpace, // مسافة أمان تحت
+            10.verticalSpace, 
           ],
         ),
       ),

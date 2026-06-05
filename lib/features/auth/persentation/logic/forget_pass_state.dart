@@ -9,7 +9,10 @@ final class ForgetPasswordError extends ForgetPasswordState {
 }
 
 final class OtpLoading extends ForgetPasswordState {}
-final class OtpSuccess extends ForgetPasswordState {}
+final class OtpSuccess extends ForgetPasswordState {
+  final String token;
+  OtpSuccess({required this.token});
+}
 final class OtpError extends ForgetPasswordState {
   final String message;
   OtpError(this.message);

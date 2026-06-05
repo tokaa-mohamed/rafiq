@@ -63,8 +63,7 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
                     BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
                       listener: (context, state) {
                         if (state is ForgetPasswordSuccess) {
-                          context.push(AppRouter.otpView);
-                        } else if (state is ForgetPasswordError) {
+context.push(AppRouter.otpView, extra: phoneController.text);                        } else if (state is ForgetPasswordError) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(state.message), backgroundColor: Colors.red),
                           );

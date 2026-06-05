@@ -8,7 +8,7 @@ class VideoEntity {
   final String views; 
   final String likes; 
   final String tag;   
-  final List<VideoEntity>? relatedVideos; // فيديوهات ذات صلة
+  final List<VideoEntity>? relatedVideos;
 
   VideoEntity({
     required this.id,

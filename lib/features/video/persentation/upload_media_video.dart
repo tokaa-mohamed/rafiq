@@ -15,9 +15,8 @@ class UploadVideoMediaView extends StatefulWidget {
 
 class _UploadMediaViewState extends State<UploadVideoMediaView> {
   final ImagePicker _picker = ImagePicker();
-  XFile? _selectedVideo; // تخزين الفيديو المختار
+  XFile? _selectedVideo;
 
-  // دالة اختيار الفيديو من الـ Gallery
   Future<void> _pickVideo() async {
     final XFile? video = await _picker.pickVideo(
       source: ImageSource.gallery,
@@ -29,13 +28,11 @@ class _UploadMediaViewState extends State<UploadVideoMediaView> {
         _selectedVideo = video;
       });
       
-      // إذا عوزاه أول ما يختار الفيديو ينقله تلقائياً للشاشة الثانية:
       if (!mounted) return;
       _navigateToCreatePost();
     }
   }
 
-  // دالة التنقل المباشر لشاشة الـ Create Post وتمرير الفيديو
   void _navigateToCreatePost() {
     if (_selectedVideo != null) {
       context.push(

@@ -51,7 +51,7 @@ class ReelsSidebarActions extends StatelessWidget {
   },
 
 
-), // قفلة الـ buildActionButton
+), 
         18.verticalSpace,
         _buildActionButton( iconPath: "assets/images/solar--plain-outline.svg",label: "7000", onTap: (){}),
         18.verticalSpace,
@@ -75,17 +75,17 @@ class ReelsSidebarActions extends StatelessWidget {
   }
 
 Widget _buildActionButton({
-  required String iconPath, // بنمرر مسار الـ SVG هنا
+  required String iconPath, 
   required String label,
   required VoidCallback onTap,
-  bool isSvg = true, // اختيار لو كنتِ لسه بتستخدمي IconData في حتة تانية
+  bool isSvg = true, 
 }) {
   return Column(
     mainAxisSize: MainAxisSize.min,
     children: [
       IconButton(
         onPressed: onTap,
-        padding: EdgeInsets.zero, // شيلنا الـ padding عشان الأيقونة تبقى مرتاحة
+        padding: EdgeInsets.zero, 
         constraints: const BoxConstraints(),
         icon: isSvg 
           ? SvgPicture.asset(
@@ -96,7 +96,7 @@ Widget _buildActionButton({
             )
           : Icon(Icons.favorite, color: Colors.white, size: 28.sp), // اختيار احتياطي
       ),
-      4.verticalSpace, // مسافة بسيطة بين الأيقونة والكلمة
+      4.verticalSpace, 
       Text(
         label,
         style: TextStyle(

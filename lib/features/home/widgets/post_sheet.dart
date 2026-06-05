@@ -68,7 +68,7 @@ CircleAvatar(
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                       decoration: BoxDecoration(
-                        color:  AppColors.grey5, // لون أزرق خفيف للأدمن
+                        color:  AppColors.grey5, 
                         borderRadius: BorderRadius.circular(6.r),
                       ),
                       child: Text(
@@ -86,11 +86,10 @@ CircleAvatar(
             ),
             20.verticalSpace,
 
-            // منطقة كتابة البوست
             ConstrainedBox(
               constraints: BoxConstraints(
-                minHeight: 150.h, // كبرنا الارتفاع الأدنى للكارد
-                maxHeight: 300.h, // عشان لو الكلام كتر أوي يعمل Scroll جوه
+                minHeight: 150.h, 
+                maxHeight: 300.h, 
               ),
               child: AppTextFormField(
                 controller: _postController,

@@ -14,6 +14,7 @@ import 'package:rafiq/features/auth/persentation/logic/signup_cubit.dart';
 import 'package:rafiq/features/chatbot_and_assessment/data/datasource/dataresourceremote.dart';
 import 'package:rafiq/features/chatbot_and_assessment/domain/repos/chat_repo.dart';
 import 'package:rafiq/features/chatbot_and_assessment/domain/repos/chat_repo_impl.dart';
+import 'package:rafiq/features/chatbot_and_assessment/domain/use_cases/get_chat_history_usecase.dart';
 import 'package:rafiq/features/chatbot_and_assessment/domain/use_cases/send_message_usecase.dart';
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/chatbot_cubit.dart';
 
@@ -42,7 +43,7 @@ void setupServiceLocator() {
   getIt.registerLazySingleton<ApiConsumer>(() => DioConsumer(dio: getIt<Dio>()));
 
   // --- Auth Feature ---
-  getIt.registerLazySingleton<AuthRepo>(() => MockAuthRepoImpl());
+getIt.registerLazySingleton<AuthRepo>(() => AuthRepoImpl(apiConsumer: getIt<ApiConsumer>()));
   getIt.registerFactory(() => LoginCubit(getIt<AuthRepo>())); 
   getIt.registerFactory(() => SignupCubit(getIt<AuthRepo>()));
   getIt.registerFactory(() => ForgetPasswordCubit(getIt<AuthRepo>()));
@@ -73,8 +74,13 @@ void setupServiceLocator() {
   getIt.registerLazySingleton(() => SendMessageUseCase(getIt<ChatRepository>()));
 
   // 4. Bloc/Cubit: بياخد الـ Use Case
-  getIt.registerFactory(() => ChatBloc(getIt<SendMessageUseCase>()));
+// 1️⃣ أولاً: تسجيل الـ UseCase الجديدة (ضيفي السطر ده تحت سطر الـ SendMessageUseCase)
+getIt.registerLazySingleton(() => GetChatHistoryUseCase(getIt<ChatRepository>()));
 
+getIt.registerFactory(() => ChatBloc(
+      getIt<SendMessageUseCase>(),
+      getIt<GetChatHistoryUseCase>(), 
+    ));
   // --- Assessment Feature ---
   getIt.registerLazySingleton<AssessmentRepository>(() => AssessmentRepositoryImpl());
   getIt.registerLazySingleton(() => GetAssessmentQuestions(getIt<AssessmentRepository>()));

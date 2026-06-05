@@ -77,7 +77,8 @@ class _OtpViewState extends State<OtpView> {
                   BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
                     listener: (context, state) {
                       if (state is OtpSuccess) {
-                        context.push(AppRouter.createNewPasswordView);
+                        
+                        context.push(AppRouter.createNewPasswordView,extra: state.token);
                       } else if (state is OtpError) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

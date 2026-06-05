@@ -72,7 +72,7 @@ abstract class AppRouter {
   
 
   static final router = GoRouter(
-    initialLocation: signIn,
+    initialLocation: homeView,
     routes: [
       GoRoute(path: welcome, builder: (context, state) => const WelcomeView()),
     //  GoRoute(path: chatPage, builder: (context, state) =>  ChatPage()),
@@ -100,10 +100,22 @@ GoRoute(
   ),
 ),
 
-      GoRoute(path: otpView, builder: (context, state) =>
-       const OtpView(phoneNumber: '')),
-      GoRoute(path: createNewPasswordView, builder: (context, state)
-       => const CreateNewPasswordView(phoneNumber: '')),
+GoRoute(
+  path: otpView, 
+  builder: (context, state) {
+    final phone = state.extra as String? ?? ''; 
+    
+    return OtpView(phoneNumber: phone); 
+  },
+), 
+
+     GoRoute(path: createNewPasswordView, builder: (context, state) {
+    final token = state.extra as String? ?? ''; 
+    return CreateNewPasswordView(token: token); 
+  },),
+
+
+
       GoRoute(path: successConfirmationView, builder: (context, state)
        => const SuccessConfirmationView()),
 
@@ -116,11 +128,13 @@ GoRoute(
            => const HomeView()),
           GoRoute(path: educationalVideosView,
            builder: (context, state) => const EducationalVideosView()),
-          GoRoute(path: '/ChatPage', builder: 
-          (context, state) =>  BlocProvider(
-  create: (_) => getIt<ChatBloc>(), 
-  child:  ChatPage(),
-)),
+        GoRoute(
+  path: '/ChatPage',
+  builder: (context, state) => BlocProvider(
+    create: (_) => getIt<ChatBloc>()..getChatHistory("temp_user_123"), 
+    child: ChatPage(),
+  ),
+),
 GoRoute(
   path: reelsView,
   builder: (context, state) {

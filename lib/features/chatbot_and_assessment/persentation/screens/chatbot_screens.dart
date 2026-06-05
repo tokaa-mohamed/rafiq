@@ -9,7 +9,7 @@ import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/asses
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/chatbot_cubit.dart';
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/chatbot_states.dart';
 
-class ChatPage extends StatefulWidget { // حولناه لـ StatefulWidget عشان الـ Controller والـ Scroll
+class ChatPage extends StatefulWidget { 
   @override
   State<ChatPage> createState() => _ChatPageState();
 }
@@ -41,18 +41,24 @@ class _ChatPageState extends State<ChatPage> {
         centerTitle: true,
         actions: [IconButton(icon: const Icon(Icons.more_vert, color: Colors.black), onPressed: () {})],
       ),
-      body: BlocConsumer<ChatBloc, ChatState>( // استخدمنا Consumer عشان نعمل Scroll لما الرسالة تيجي
+      body: BlocConsumer<ChatBloc, ChatState>( 
         listener: (context, state) {
           if (state is ChatLoaded) {
             _scrollToBottom();
           }
         },
         builder: (context, state) {
+          if (state is ChatHistoryLoading) {
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.lightYellow),
+            );
+          }
+
           return Column(
             children: [
               const SizedBox(height: 20),
               Expanded(
-                // لو الحالة Initial ومفيش رسايل، اعرض الـ Welcome View
+                // 2️⃣ لو الـ State لسه Initial (يعني الباكيند رجع لستة فاضية)، اعرض الـ Welcome View
                 child: (state is ChatInitial) 
                     ? _buildWelcomeView(context) 
                     : _buildChatConversation(state),
@@ -102,11 +108,11 @@ class _ChatPageState extends State<ChatPage> {
     if (state is ChatLoaded) {
       messages = state.messages;
     } else if (state is ChatLoading) {
-       messages = context.read<ChatBloc>().allMessages; 
+      messages = context.read<ChatBloc>().allMessages; 
     }
 
     return ListView.builder(
-      controller: _scrollController, // ربط الـ Scroll
+      controller: _scrollController, 
       padding: const EdgeInsets.all(16),
       itemCount: messages.length,
       itemBuilder: (context, index) => _buildChatBubble(messages[index]),
@@ -122,8 +128,6 @@ class _ChatPageState extends State<ChatPage> {
         decoration: BoxDecoration(
           color: msg.isBot ? Colors.white : AppColors.lightYellow,
           borderRadius: BorderRadius.circular(15).copyWith(
-            bottomLeft: msg.isBot ? Radius.zero : const Radius.circular(15),
-            bottomRight: msg.isBot ? const Radius.circular(15) : Radius.zero,
           ),
         ),
         child: Text(
@@ -202,7 +206,7 @@ class _ChatPageState extends State<ChatPage> {
                       if (_messageController.text.trim().isNotEmpty) {
                         context.read<ChatBloc>().sendMessage(_messageController.text);
                         _messageController.clear();
-                        FocusScope.of(context).unfocus(); // قفل الكيبورد
+                        FocusScope.of(context).unfocus(); 
                       }
                     },
                     child: Container(

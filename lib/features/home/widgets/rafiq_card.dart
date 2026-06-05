@@ -49,7 +49,6 @@ class RafiqPostCard extends StatelessWidget {
     );
   }
 
-  // نص البوست
   Widget _buildContent() {
     return Text(
       "Active listening is more than just hearing words. It's about understanding the emotion behind them...",
@@ -57,7 +56,6 @@ class RafiqPostCard extends StatelessWidget {
     );
   }
 
-  // الأزرار (Like, Comment, Share)
   Widget _buildActions(BuildContext context) {
     return Row(
       children: [

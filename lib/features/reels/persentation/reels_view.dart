@@ -31,7 +31,6 @@ class _ReelsViewState extends State<ReelsView> {
   }
 
   void _initVideo() {
-    // لو ويب بنستخدم networkUrl ولو موبايل بنستخدم file
     if (kIsWeb) {
       _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoFile!.path));
     } else {

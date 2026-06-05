@@ -19,7 +19,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  late TextEditingController userNameController;
+  late TextEditingController emailController; // 👈 تم التعديل إلى إيميل
   late TextEditingController passwordController;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -28,16 +28,15 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    userNameController = TextEditingController();
+    emailController = TextEditingController();
     passwordController = TextEditingController();
   }
 
   @override
   void dispose() {
-    // 3. تنظيف الذاكرة (Memory Management)
-    userNameController.dispose();
+    emailController.dispose();
     passwordController.dispose();
-    isPasswordObscure.dispose(); // لازم نقفل الـ notifier برضه
+    isPasswordObscure.dispose();
     super.dispose();
   }
 
@@ -45,11 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.babypink,
-            appBar:  CustomAppBar(
-              title: "Login"),
-               
-            
-
+      appBar: const CustomAppBar(title: "Login"),
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Padding(
@@ -61,30 +56,30 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // --- Header ---
-                      SizedBox(height: 30.h,),
-                  // --- Username Field ---
-                  _buildLabel('User Name'),
-                                        SizedBox(height: 15.h,),
-
+                  SizedBox(height: 30.h,),
+                  
+                  // --- Email Field ---
+                  _buildLabel('Email'), // 👈 تغيير التسمية هنا
+                  SizedBox(height: 15.h,),
                   AppTextFormField(
-                    hintText: 'monther_21',
-                    controller: userNameController,
+                    hintText: 'toka@gmail.com',
+                    controller: emailController,
                     prefixIcon: const Icon(Icons.check_circle_outline, color: AppColors.grey1),
-                    suffixIcon: const Icon(Icons.person_outline, color: AppColors.secondaryLightactive),
-                    validator: (value) => (value == null || value.isEmpty) ? 'Please enter your username' : null,
+                    suffixIcon: const Icon(Icons.email_outlined, color: AppColors.secondaryLightactive),
+                    validator: (value) => (value == null || value.isEmpty || !value.contains('@')) 
+                        ? 'Please enter a valid email' 
+                        : null,
                   ),
-                                                          SizedBox(height: 15.h,),
+                  SizedBox(height: 15.h,),
 
-
+                  // --- Password Field ---
                   _buildLabel('Password'),  
-                                                          SizedBox(height: 15.h,),
-
+                  SizedBox(height: 15.h,),
                   ValueListenableBuilder<bool>(
                     valueListenable: isPasswordObscure,
                     builder: (context, obscureValue, child) {
                       return AppTextFormField(
-                        hintText: 'e.g.monther-*99',
+                        hintText: '********',
                         isObscureText: obscureValue,
                         controller: passwordController,
                         prefixIcon: const Icon(Icons.check_circle_outline, color: AppColors.grey1),
@@ -101,16 +96,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                   ),
-                                                         SizedBox(height: 15.h,),
+                  SizedBox(height: 15.h,),
 
                   // --- Forget Password ---
                   _buildForgetPassword(context),
                   30.verticalSpace,
 
+                  // --- Bloc Consumer ---
                   BlocConsumer<LoginCubit, LoginState>(
                     listener: (context, state) {
                       if (state is LoginSuccess) {
-                        context.go(AppRouter.homeView);
+                        context.go(AppRouter.homeView); // 👈 هيروح الـ Home لما الباكيند يرجع Success
                       } else if (state is LoginError) {
                         _showErrorSnackBar(context, state.message);
                       }
@@ -122,16 +118,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: state is LoginLoading
                             ? null
                             : () {
-                              context.push(AppRouter.homeView);
-
-
-                                // if (formKey.currentState!.validate()) {
-                                  
-                                //   context.read<LoginCubit>().login(
-                                //         userNameController.text,
-                                //         passwordController.text,
-                                //       );
-                                // }
+                                if (formKey.currentState!.validate()) {
+                                  context.read<LoginCubit>().login(
+                                        emailController.text.trim(),
+                                        passwordController.text,
+                                      );
+                                }
                               },
                         backgroundColor: state is LoginLoading ? Colors.grey : AppColors.primaryNormalActive,
                         textColor: Colors.white,
@@ -148,8 +140,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
-
 
   Widget _buildLabel(String label) {
     return Padding(
@@ -169,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Text(
           "Forget password ?",
           style: AppTextStyles.regular14cairo.copyWith(
-            color: Colors.black12,
+            color: Colors.black54,
             decoration: TextDecoration.underline,
           ),
         ),

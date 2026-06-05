@@ -39,31 +39,29 @@ class _HomeViewState extends State<HomeView> {
               16.verticalSpace,
 
 SizedBox(
-  height: 200.h, // كبرنا الارتفاع شوية عشان الـ Padding
+  height: 200.h, 
   child: PageView.builder(
     controller: _pageController,
-    itemCount: 5, // عدد الصور اللي عندك
+    itemCount: 5, 
     onPageChanged: (int index) {
       setState(() {
-        _currentPage = index; // تحديث الـ Index لما اليوزر يسحب
+        _currentPage = index; 
       });
     },
     itemBuilder: (context, index) {
-      // هل دي الصورة اللي اليوزر واقف عليها حالياً؟
       bool isActive = index == _currentPage;
 
       return AnimatedPadding(
         duration: const Duration(milliseconds: 300),
-        // الصورة النشطة مفيهاش padding عشان تبان أكبر، والباقي بياخد padding
         padding: EdgeInsets.symmetric(
           horizontal: 10.w, 
           vertical: isActive ? 0 : 12.h, 
         ),
+
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20.r),
           child: Stack(
             children: [
-              // 1. الصورة الأساسية
               Container(
                 width: double.infinity,
                 height: double.infinity,
@@ -75,7 +73,6 @@ SizedBox(
                 ),
               ),
               
-              // 2. طبقة الـ Shadow (بتظهر بس لو الصورة isActive)
               AnimatedOpacity(
                 duration: const Duration(milliseconds: 300),
                 opacity: isActive ? 1.0 : 0.0, // لو مش نشطة بتبقى شفافة تماماً

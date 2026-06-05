@@ -21,7 +21,6 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  // 1. Controllers & Keys
   late TextEditingController fullNameController;
   late TextEditingController userNameController;
   late TextEditingController phoneController;
@@ -29,7 +28,6 @@ class _SignupScreenState extends State<SignupScreen> {
   late TextEditingController confirmPasswordController;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  // 2. ValueNotifiers for Local UI State (Performance Optimization)
   final ValueNotifier<bool> isPasswordObscure = ValueNotifier<bool>(true);
   final ValueNotifier<bool> isConfirmPasswordObscure = ValueNotifier<bool>(true);
 
@@ -58,8 +56,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  CustomAppBar(title: "Sign Up"),
-
+      appBar: CustomAppBar(title: "Sign Up"),
       backgroundColor: AppColors.babypink,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
@@ -74,8 +71,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 children: [
                   SizedBox(height: 30.h,),
                   _buildLabel('Full Name'),
-                                    SizedBox(height: 15.h,),
-
+                  SizedBox(height: 15.h,),
                   AppTextFormField(
                     hintText: 'Toka Mohamed',
                     controller: fullNameController,
@@ -83,13 +79,19 @@ class _SignupScreenState extends State<SignupScreen> {
                     suffixIcon: const Icon(Icons.person_outline, color: AppColors.secondaryLightactive),
                     validator: (value) => (value == null || value.isEmpty) ? 'Required' : null,
                   ),
-
-                                                      SizedBox(height: 15.h,),
-
-
+                  SizedBox(height: 15.h,),
+                  _buildLabel('Email'),
+                  SizedBox(height: 15.h,),
+                  AppTextFormField(
+                    hintText: 'toka@gmail.com',
+                    controller: userNameController,
+                    prefixIcon: const Icon(Icons.check_circle_outline, color: AppColors.grey1),
+                    suffixIcon: const Icon(Icons.email_outlined, color: AppColors.secondaryLightactive),
+                    validator: (value) => (value == null || value.isEmpty || !value.contains('@')) ? 'Invalid Email' : null,
+                  ),
+                  SizedBox(height: 15.h,),
                   _buildLabel('Phone Number'),
-                                                                        SizedBox(height: 15.h,),
-
+                  SizedBox(height: 15.h,),
                   AppTextFormField(
                     hintText: '01090895795',
                     controller: phoneController,
@@ -97,11 +99,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     suffixIcon: const Icon(Icons.phone_outlined, color: AppColors.secondaryLightactive),
                     validator: (value) => (value == null || value.isEmpty) ? 'Required' : null,
                   ),
-                                                      SizedBox(height: 15.h,),
-
+                  SizedBox(height: 15.h,),
                   _buildLabel('Password'),
-                                                                        SizedBox(height: 15.h,),
-
+                  SizedBox(height: 15.h,),
                   ValueListenableBuilder(
                     valueListenable: isPasswordObscure,
                     builder: (context, obscure, _) {
@@ -119,11 +119,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       );
                     },
                   ),
-                                                      SizedBox(height: 15.h,),
-
+                  SizedBox(height: 15.h,),
                   _buildLabel('Confirm Password'),
-                                                                        SizedBox(height: 15.h,),
-
+                  SizedBox(height: 15.h,),
                   ValueListenableBuilder(
                     valueListenable: isConfirmPasswordObscure,
                     builder: (context, obscure, _) {
@@ -141,10 +139,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       );
                     },
                   ),
-
                   30.verticalSpace,
-                  
-                  // ✅ الـ BlocConsumer للتعامل مع حالات الـ Signup
                   BlocConsumer<SignupCubit, SignupState>(
                     listener: (context, state) {
                       if (state is SignupSuccess) {
@@ -165,6 +160,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   context.read<SignupCubit>().signup(
                                     SignupRequestEntity(
                                       fullName: fullNameController.text,
+                                      email: userNameController.text,
                                       phone: phoneController.text,
                                       password: passwordController.text,
                                     ),
@@ -177,7 +173,6 @@ class _SignupScreenState extends State<SignupScreen> {
                       );
                     },
                   ),
-
                   20.verticalSpace,
                   _buildSocialDivider(),
                   20.verticalSpace,
@@ -191,8 +186,6 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     );
   }
-
-
 
   Widget _buildSocialDivider() {
     return Row(
@@ -220,7 +213,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Widget _socialIcon(String asset) {
     return GestureDetector(
-      onTap: () {}, 
+      onTap: () {},
       child: SvgPicture.asset(asset, width: 40.w, height: 40.h),
     );
   }

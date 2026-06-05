@@ -7,7 +7,7 @@ class DioConsumer extends ApiConsumer {
   final Dio dio;
 
   DioConsumer({required this.dio}) {
-    dio.options.baseUrl = "https://rafiq-api.com/api/"; 
+    dio.options.baseUrl = "http://127.0.0.1:5050/"; 
     dio.interceptors.add(ApiInterceptors()); 
     dio.interceptors.add(LogInterceptor(
       requestBody: true,

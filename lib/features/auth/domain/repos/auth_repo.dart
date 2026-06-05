@@ -5,9 +5,9 @@ abstract class AuthRepo {
   Future<UserEntity> login(String username, String password);
    Future<UserEntity> signup(SignupRequestEntity request);
    Future<void> forgetPassword(String phone);
-   Future<void> verifyOtp(String phone, String otp);
+   Future<String> verifyOtp(String phone, String otp);
    Future<void> resetPassword({
-    required String phone, 
+    required String token, 
     required String newPassword,
   });
 

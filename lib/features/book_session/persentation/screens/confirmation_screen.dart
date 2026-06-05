@@ -50,17 +50,14 @@ class ConfirmationScreen extends StatelessWidget {
             
             SizedBox(height: 40.h),
             
-            // 2. Details Card
             const SessionDetailsCard(),
             
             SizedBox(height: 20.h),
             
-            // 3. Zoom Card
             const ZoomMeetingCard(),
             
             SizedBox(height: 40.h),
             
-            // 4. Action Buttons
             CustomButton(
               text: 'Join Session',
               onPressed: () {},

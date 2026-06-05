@@ -15,7 +15,6 @@ class _UploadMediaViewState extends State<UploadMediaView> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickVideo() async {
-    // الـ XFile هو اللي بيحل مشكلة الـ Unsupported Operation على الويب
     final XFile? video = await _picker.pickVideo(
       source: ImageSource.gallery,
       maxDuration: const Duration(minutes: 2),
@@ -24,11 +23,9 @@ class _UploadMediaViewState extends State<UploadMediaView> {
     if (video != null) {
       if (!mounted) return;
 
-      // التعديل هنا: بنبعت الـ video كـ XFile مباشرة للـ Router
-      // وبنستخدم context.push عشان نروح لصفحة الـ NewReelView
       context.push(
         AppRouter.newReelView,
-        extra: video, // بنمرر الـ XFile هنا
+        extra: video, 
       );
     }
   }

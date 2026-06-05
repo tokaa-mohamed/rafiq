@@ -13,7 +13,8 @@ class SignupCubit extends Cubit<SignupState> {
       final user = await authRepo.signup(request);
       emit(SignupSuccess(user));
     } catch (e) {
-      emit(SignupError("حدث خطأ أثناء إنشاء الحساب، حاول مجدداً"));
+      final errorMessage = e.toString().replaceAll('Exception: ', '');
+      emit(SignupError(errorMessage));
     }
   }
 }

@@ -16,7 +16,7 @@ class BookSessionScreen extends StatefulWidget {
 }
 
 class _BookSessionScreenState extends State<BookSessionScreen> {
-  int selectedIndex = 1; // موعد افتراضي مختار
+  int selectedIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +40,12 @@ class _BookSessionScreenState extends State<BookSessionScreen> {
             
             SizedBox(height: 30.h),
             
-            // 2. قسم المواعيد
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Text('Available Slots', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
             ),
             
-            SizedBox(height: 120.h, // تحديد طول الـ List
+            SizedBox(height: 120.h,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 20.w),

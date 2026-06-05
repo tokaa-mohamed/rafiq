@@ -3,13 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:rafiq/features/home/widgets/custom_bottom_navbar.dart';
 
 class MainLayout extends StatelessWidget {
-  final Widget child; // هنا هنستخدم child بدل shell
+  final Widget child; 
 
   const MainLayout({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
-    // ميثود بتعرفنا إحنا في أنهي Index بناءً على الـ Path الحالي
     int getCurrentIndex(BuildContext context) {
       final String location = GoRouterState.of(context).uri.toString();
       if (location.startsWith('/HomeView')) return 0;
@@ -21,7 +20,7 @@ class MainLayout extends StatelessWidget {
     }
 
     return Scaffold(
-      body: child, // عرض الصفحة الحالية
+      body: child, 
       bottomNavigationBar: CustomBottomNavBar(
         currentIndex: getCurrentIndex(context),
         onTap: (index) {

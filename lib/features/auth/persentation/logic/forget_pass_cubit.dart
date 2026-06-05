@@ -18,21 +18,21 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
     }
   }
 
-  Future<void> verifyOtp({required String phone, required String otp}) async {
+Future<void> verifyOtp({required String phone, required String otp}) async {
   emit(OtpLoading());
   try {
-    await authRepo.verifyOtp(phone, otp);
-    emit(OtpSuccess());
+    final String token = await authRepo.verifyOtp(phone, otp); 
+    
+    emit(OtpSuccess(token: token)); 
   } catch (e) {
     emit(OtpError(e.toString()));
   }
 }
 
-
-Future<void> resetPassword({required String phone, required String password}) async {
+Future<void> resetPassword({required String token, required String password}) async {
   emit(ResetPasswordLoading());
   try {
-    await authRepo.resetPassword(phone: phone, newPassword: password);
+    await authRepo.resetPassword(token: token, newPassword: password);
     emit(ResetPasswordSuccess());
   } catch (e) {
     emit(ResetPasswordError("فشل تغيير كلمة المرور، حاول مجدداً"));

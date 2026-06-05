@@ -225,7 +225,7 @@ Widget _buildStatItem(IconData icon, String val) {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12.r),
                   child: Image.asset(
-                    "assets/images/6to12.png", // استبدال بصورة الفيديو الحقيقية
+                    "assets/images/6to12.png",
                     height: 100.h,
                     width: 180.w,
                     fit: BoxFit.cover,

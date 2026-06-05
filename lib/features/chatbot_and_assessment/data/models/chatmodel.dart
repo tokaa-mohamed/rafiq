@@ -8,7 +8,9 @@ class ChatModel extends ChatMessage {
     return ChatModel(
 text: json['reply'] ?? "لا يوجد رد",
       isBot: true,
-      timestamp: DateTime.now(),
-    );
+      
+timestamp: json['timestamp'] != null 
+        ? DateTime.parse(json['timestamp']) 
+        : DateTime.now(),    );
   }
 }
