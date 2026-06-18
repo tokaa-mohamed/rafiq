@@ -1,4 +1,3 @@
-// features/assessment/presentation/pages/assessment_result_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +5,7 @@ import 'package:rafiq/core/di/dependency_injection.dart';
 import 'package:rafiq/core/thieming/app_colors.dart';
 import 'package:rafiq/core/thieming/app_styles.dart';
 import 'package:rafiq/core/widgets/custom_buttom.dart';
+import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/assessment_intro.dart'; 
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/assess_result_cubit.dart';
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/assess_result_state.dart';
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/planning_state_cubit.dart';
@@ -14,7 +14,9 @@ import 'package:rafiq/features/chatbot_and_assessment/persentation/widgets/asses
 import '../widgets/result_tile.dart';
 
 class AssessmentResultPage extends StatelessWidget {
-  const AssessmentResultPage({super.key});
+  final String userId;
+  
+  const AssessmentResultPage({super.key, this.userId = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,6 @@ class AssessmentResultPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center, 
               children: [
-                // 1. النتيجة الرئيسية
                 Text(
                   'Your Child is a ${result.mainTrait}', 
                   textAlign: TextAlign.center, 
@@ -58,10 +59,10 @@ class AssessmentResultPage extends StatelessWidget {
                 ),
                 
                 SizedBox(height: 16.h),
-                // 2. الـ Tiles مأخوذة ديناميكيًا بالكامل بناءً على الحسابات الجديدة
+                
                 ...result.scores.map((s) => ResultTile(
                   icon: _getIconForTrait(s.name),
-                  title: _translateTraitName(s.name), // دالة مساعدة لعرض الاسم بشكل احترافي
+                  title: _translateTraitName(s.name), 
                   score: s.score,
                   description: s.description,
                 )),
@@ -73,36 +74,45 @@ class AssessmentResultPage extends StatelessWidget {
                 ),
                 SizedBox(height: 32.h), 
 
+                // 1. زرار Done شغال تمام
                 CustomButton(
                   text: 'Done',
                   height: 55.h,
                   borderRadius: 12.r,
                   onPressed: () {
-Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => BlocProvider(
-      create: (context) => getIt<ParentingPlanCubit>(), 
-      child: const ParentingPlanView(),
-    ),
-  ),
-);                    
-                    // Navigation Code
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                          create: (context) => getIt<ParentingPlanCubit>(), 
+                          child: const ParentingPlanView(),
+                        ),
+                      ),
+                    );                    
                   },
                 ),
                 SizedBox(height: 16.h),
+                
                 CustomButton(
                   backgroundColor: Colors.transparent,
                   text: 'Retake Assessment',
-                  borderSide: BorderSide(color: AppColors.primaryNormalActive),
-                  textstyle: AppTextStyles.regular16cairo.copyWith(color: AppColors.primaryNormalActive),
+                  borderSide: const BorderSide(color: AppColors.primaryNormalActive),
+                  textstyle: AppTextStyles.regular16cairo.copyWith(color: AppColors.primaryNormal),
+                  textColor: AppColors.primaryNormal,
                   height: 55.h,
                   borderRadius: 12.r,
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AssessmentIntroPage(
+                          userId: userId, 
+                        ),
+                      ),
+                    );
                   },
                 ),
-              ],
+              ], 
             ),
           );
         },
@@ -110,7 +120,6 @@ Navigator.push(
     );
   }
 
-  // 🚀 إصلاح الـ Switch Case ليدعم الكلمات الـ lowercase القادمة من الباكيند
   IconData _getIconForTrait(String traitName) {
     switch (traitName.toLowerCase()) {
       case 'leadership': return Icons.star;
@@ -118,17 +127,28 @@ Navigator.push(
       case 'the thinker': case 'thinker': return Icons.lightbulb;
       case 'focus': return Icons.psychology; 
       case 'sociability': return Icons.people;
+      case 'empathy': return Icons.favorite;
+      case 'self_control': return Icons.gavel;
+      case 'curiosity': return Icons.search;
+      case 'adaptability': return Icons.cached;
+      case 'sensitivity': return Icons.waves;
       default: return Icons.person;
     }
   }
 
-  // دالة مساعدة لترجمة وعرض المفاتيح الإنجليزية لأسماء عربية جميلة في الـ UI
   String _translateTraitName(String traitName) {
     switch (traitName.toLowerCase()) {
-      case 'focus': return 'التركيز والانتباه';
-      case 'leadership': return 'المهارات القيادية';
-      case 'sociability': return 'الذكاء الاجتماعي';
-      default: return traitName;
+      case 'focus': return 'Focus';
+      case 'leadership': return 'Leadership';
+      case 'sociability': return 'Sociability';
+      case 'empathy': return 'Empathy';
+      case 'self_control': return 'Self-Control';
+      case 'curiosity': return 'Curiosity';
+      case 'adaptability': return 'Adaptability';
+      case 'sensitivity': return 'Sensitivity';
+      default: 
+        if (traitName.isEmpty) return traitName;
+        return traitName[0].toUpperCase() + traitName.substring(1).toLowerCase();
     }
   }
 }

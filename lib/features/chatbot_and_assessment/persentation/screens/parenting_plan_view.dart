@@ -38,13 +38,12 @@ class _ParentingPlanViewState extends State<ParentingPlanView> {
                       icon: const Icon(Icons.arrow_back, color: Colors.black),
                       onPressed: () => Navigator.pop(context),
                     ),
-         Text("الخطه التربويه", style: AppTextStyles.bold24cairo.copyWith(color: AppColors.darkblack)),
+                    Text("Parenting Plan", style: AppTextStyles.bold24cairo.copyWith(color: AppColors.darkblack)),
                   ],
                 ),
               ),
               
               Expanded(
-                // 🌟 الحل السحري: بنفصل الـ Actions بتاعة الـ PDF جوه الـ Listener عشان متأثرش على الـ UI
                 child: BlocConsumer<ParentingPlanCubit, ParentingPlanState>(
                   listener: (context, state) {
                     if (state is SavePdfLoading) {
@@ -56,7 +55,6 @@ class _ParentingPlanViewState extends State<ParentingPlanView> {
                         const SnackBar(content: Text("تم تحميل الملف بنجاح! 🎉")),
                       );
                     } else if (state is ParentingPlanError && state.message.contains("PDF")) {
-                      // لو الأيرور خاص بالـ PDF نظهره هنا بس
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(state.message), backgroundColor: Colors.red),
                       );
@@ -77,9 +75,10 @@ class _ParentingPlanViewState extends State<ParentingPlanView> {
                       }
                       return ListView.builder(
                         padding: EdgeInsets.symmetric(horizontal: 16.w),
-                        itemCount: state.plans.length,
+                        // 🌟 الحل هنا: خليناها 1 عشان نضمن يعرض كارت واحد فقط وميتكررش بناء على الـ List اللي جاية
+                        itemCount: 1, 
                         itemBuilder: (context, index) {
-                          final plan = state.plans[index];
+                          final plan = state.plans.first; // نأخذ الخطة الأولى دائماً
                           return Padding(
                             padding: EdgeInsets.only(bottom: 16.h),
                             child: ParentingPlanCard(
