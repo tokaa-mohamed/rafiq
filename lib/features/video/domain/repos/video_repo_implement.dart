@@ -1,84 +1,57 @@
-import 'package:flutter/material.dart';
-
+import 'package:rafiq/core/networking/api_consumer.dart';
+import 'package:rafiq/features/video/data/models/categoryvideo_model.dart';
+import 'package:rafiq/features/video/data/models/video_model.dart';
 import '../../domain/entities/video_category_entity.dart';
 import '../../domain/entities/video_entity.dart';
 import '../../domain/repos/video_repo.dart';
 
 class VideoRepoImpl implements VideoRepo {
-  
-  static List<VideoEntity> _mockVideos = [
-    VideoEntity(
-      id: "1",
-      title: "The Power of Play",
-      description: "Understanding brain development through play and early interaction.",
-      thumbnailUrl: "assets/images/0to3.png",
-      videoUrl: "assets/images/baby-videos.mp4",
-      duration: "12:45",
-      views: "15k",
-      likes: "2.4k",
-    ),
-    VideoEntity(
-      id: "2",
-      title: "Nurturing Early Bonds",
-      description: "Practical tips for secure attachment and emotional growth during infancy.",
-      thumbnailUrl: "assets/images/0to6.png",
-      videoUrl: "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4",
-      duration: "08:30",
-      views: "10k",
-      likes: "1.8k",
-    ),
-  ];
+  final ApiConsumer api;
 
+  VideoRepoImpl({required this.api});
 
   @override
   Future<List<VideoCategoryEntity>> getCategories() async {
-    // محاكاة تأخير الشبكة
-    await Future.delayed(const Duration(seconds: 1));
-    
-    return [
-      VideoCategoryEntity(
-        title: "Parenting",
-        description: "Guided milestones for every developmental phase.",
-        icon: Icons.family_restroom, color: Colors.blue,
-      ),
-      VideoCategoryEntity(
-        title: "Marital Relationship",
-        description: "Building healthy communication and bonds.",
-        icon: Icons.favorite, color: Colors.red,
-      ),
+    final response = await api.get("videos/categories"); // تعديل الباث ليتوافق مع الـ prefix
+    List categoriesJson = response as List;
+    return categoriesJson.map((json) => VideoCategoryModel.fromJson(json)).toList();
+  }
 
-
-            VideoCategoryEntity(
-        title: "Family preparation",
-        description: "Building healthy communication and bonds.",
-        icon: Icons.home_work_sharp, color: Colors.red,
-      ),
-
-    ];
+  Future<void> postCategory(VideoCategoryEntity category) async {
+    final categoryModel = VideoCategoryModel(
+      id: category.id,
+      title: category.title,
+      description: category.description,
+      iconName: category.iconName,
+    );
+    await api.post("videos/categories", data: categoryModel.toJson());
   }
 
   @override
   Future<List<VideoEntity>> getVideosByStage(String stageId) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    return _mockVideos;
+    final response = await api.get(
+      "videos/list/$stageId",
+      queryParameters: {
+        "limit": 20,
+        "offset": 0,
+      },
+    );
+    List videosJson = response as List;
+    return videosJson.map((json) => VideoModel.fromJson(json)).toList();
   }
-
 
   @override
   Future<void> addVideo(VideoEntity video) async {
-    await Future.delayed(const Duration(seconds: 1));
-    _mockVideos.add(video);
+    throw UnimplementedError();
   }
 
   @override
   Future<void> deleteVideo(String videoId) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    _mockVideos.removeWhere((video) => video.id == videoId);
+    await api.delete("videos/$videoId");
   }
-  
+
   @override
   Future<VideoEntity> getVideoDetails(String videoId) {
-    // TODO: implement getVideoDetails
     throw UnimplementedError();
   }
 }

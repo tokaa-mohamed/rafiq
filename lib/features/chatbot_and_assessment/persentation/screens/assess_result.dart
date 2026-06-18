@@ -2,12 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rafiq/core/di/dependency_injection.dart';
 import 'package:rafiq/core/thieming/app_colors.dart';
 import 'package:rafiq/core/thieming/app_styles.dart';
 import 'package:rafiq/core/widgets/custom_buttom.dart';
-import 'package:rafiq/features/book_session/persentation/screens/select_date.dart';
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/assess_result_cubit.dart';
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/assess_result_state.dart';
+import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/planning_state_cubit.dart';
+import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/parenting_plan_view.dart';
 import 'package:rafiq/features/chatbot_and_assessment/persentation/widgets/assess_charts.dart'; 
 import '../widgets/result_tile.dart';
 
@@ -19,7 +21,7 @@ class AssessmentResultPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
-        title:  Text('Assessment Result',style: AppTextStyles.bold24cairo.copyWith(color: AppColors.darkblack),), 
+        title: Text('Assessment Result', style: AppTextStyles.bold24cairo.copyWith(color: AppColors.darkblack)), 
         centerTitle: true, 
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -40,7 +42,7 @@ class AssessmentResultPage extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center, // عشان العناوين تبقى متسنترة
+              crossAxisAlignment: CrossAxisAlignment.center, 
               children: [
                 // 1. النتيجة الرئيسية
                 Text(
@@ -56,35 +58,44 @@ class AssessmentResultPage extends StatelessWidget {
                 ),
                 
                 SizedBox(height: 16.h),
+                // 2. الـ Tiles مأخوذة ديناميكيًا بالكامل بناءً على الحسابات الجديدة
                 ...result.scores.map((s) => ResultTile(
                   icon: _getIconForTrait(s.name),
-                  title: s.name,
+                  title: _translateTraitName(s.name), // دالة مساعدة لعرض الاسم بشكل احترافي
                   score: s.score,
                   description: s.description,
                 )),
 
-SizedBox(height: 8.h),
-AssessmentChartsSection(
-  confidence: result.confidenceScore,
-  dimensions: result.dimensionScores,
-),
+                SizedBox(height: 8.h),
+                AssessmentChartsSection(
+                  confidence: result.confidenceScore,
+                  dimensions: result.dimensionScores,
+                ),
                 SizedBox(height: 32.h), 
-
 
                 CustomButton(
                   text: 'Done',
                   height: 55.h,
                   borderRadius: 12.r,
                   onPressed: () {
-
+Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => BlocProvider(
+      create: (context) => getIt<ParentingPlanCubit>(), 
+      child: const ParentingPlanView(),
+    ),
+  ),
+);                    
+                    // Navigation Code
                   },
                 ),
                 SizedBox(height: 16.h),
                 CustomButton(
                   backgroundColor: Colors.transparent,
                   text: 'Retake Assessment',
-                  borderSide: BorderSide(color: AppColors.primaryNormalActive,),
-                  textstyle:AppTextStyles.regular16cairo.copyWith(color: AppColors.primaryNormalActive),
+                  borderSide: BorderSide(color: AppColors.primaryNormalActive),
+                  textstyle: AppTextStyles.regular16cairo.copyWith(color: AppColors.primaryNormalActive),
                   height: 55.h,
                   borderRadius: 12.r,
                   onPressed: () {
@@ -99,12 +110,25 @@ AssessmentChartsSection(
     );
   }
 
+  // 🚀 إصلاح الـ Switch Case ليدعم الكلمات الـ lowercase القادمة من الباكيند
   IconData _getIconForTrait(String traitName) {
-    switch (traitName) {
-      case 'Leader': return Icons.star;
-      case 'Truth-Seeker': return Icons.search;
-      case 'The Thinker': return Icons.lightbulb;
+    switch (traitName.toLowerCase()) {
+      case 'leadership': return Icons.star;
+      case 'truth-seeker': return Icons.search;
+      case 'the thinker': case 'thinker': return Icons.lightbulb;
+      case 'focus': return Icons.psychology; 
+      case 'sociability': return Icons.people;
       default: return Icons.person;
+    }
+  }
+
+  // دالة مساعدة لترجمة وعرض المفاتيح الإنجليزية لأسماء عربية جميلة في الـ UI
+  String _translateTraitName(String traitName) {
+    switch (traitName.toLowerCase()) {
+      case 'focus': return 'التركيز والانتباه';
+      case 'leadership': return 'المهارات القيادية';
+      case 'sociability': return 'الذكاء الاجتماعي';
+      default: return traitName;
     }
   }
 }

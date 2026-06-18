@@ -39,17 +39,18 @@ class AssessmentChartsSection extends StatelessWidget {
           ),
         ),
         SizedBox(width: 12.w),
+        // 2. Trait Breakdown Card
         Expanded(
           child: _buildInfoCard(
             title: 'TRAIT BREAKDOWN',
             child: Column(
               children: [
-                // ملاحظة: الرسم السداسي محتاج CustomPainter، حالياً هنحط مكان تشبيهي
                 Icon(Icons.hexagon_outlined, size: 60.h, color: Colors.blue[100]),
                 SizedBox(height: 10.h),
                 Wrap(
                   spacing: 10.w,
-                  children: dimensions.entries.map((e) => _buildSmallScore(e.key, e.value.toInt())).toList(),
+                  runSpacing: 4.h,
+                  children: dimensions.entries.map((e) => _buildSmallScore(_translateDimensionId(e.key), e.value.toInt())).toList(),
                 )
               ],
             ),
@@ -81,10 +82,21 @@ class AssessmentChartsSection extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        CircleAvatar(radius: 3, backgroundColor: score > 60 ? Colors.green : Colors.orange),
+        CircleAvatar(radius: 3, backgroundColor: score > 50 ? Colors.green : Colors.orange),
         SizedBox(width: 4.w),
         Text('$label: $score', style: TextStyle(fontSize: 10.sp)),
       ],
     );
+  }
+
+  String _translateDimensionId(String id) {
+    switch (id.toLowerCase()) {
+      case 'thinker': return 'المفكر';
+      case 'independent': return 'المستقل';
+      case 'planner': return 'المنظم';
+      case 'challenger': return 'المجادل';
+      case 'energetic': return 'النشيط';
+      default: return id;
+    }
   }
 }

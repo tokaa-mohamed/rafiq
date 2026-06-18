@@ -1,11 +1,33 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rafiq/core/di/dependency_injection.dart';
+import 'package:rafiq/core/networking/notification_service.dart';
 import 'package:rafiq/core/routes/app_routes.dart';
+import 'package:rafiq/firebase_options.dart';
+import 'dart:developer' as developer;
 
 void main()async {
-  WidgetsFlutterBinding.ensureInitialized();
-  setupServiceLocator();
+WidgetsFlutterBinding.ensureInitialized();
+  
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ); 
+
+  NotificationService notificationService = NotificationService();
+  await notificationService.initNotifications();
+
+  
+
+  FirebaseMessaging.onMessage.listen((message) {
+    notificationService.showLocalNotification(message);
+    developer.log("🔥 RECEIVED IN FOREGROUND");
+    developer.log("Title: ${message.notification?.title}");
+    developer.log("Body: ${message.notification?.body}");
+  });
+  
+   setupServiceLocator();
   runApp(const MyApp());
 }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rafiq/core/networking/notification_service.dart';
 import 'package:rafiq/core/thieming/app_styles.dart';
 import 'package:rafiq/features/home/widgets/admin_create_post.dart';
 import 'package:rafiq/features/home/widgets/category_item.dart';
@@ -19,6 +20,8 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+ 
+
   int _selectedIndex = 0;
    final PageController _pageController = PageController(viewportFraction: 0.85);
  int _currentPage = 0;

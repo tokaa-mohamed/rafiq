@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rafiq/core/di/dependency_injection.dart';
 import 'package:rafiq/core/thieming/app_colors.dart';
 import 'package:rafiq/core/thieming/app_styles.dart';
-import 'package:rafiq/features/video/persentation/admin_video_view.dart';
 import 'package:rafiq/features/video/persentation/age_stage_view.dart';
 import 'package:rafiq/features/video/persentation/logic/video_card_cubit.dart';
 import 'package:rafiq/features/video/persentation/logic/video_card_state.dart';
@@ -28,11 +27,9 @@ class EducationalVideosView extends StatelessWidget {
                 child: CircularProgressIndicator(color: AppColors.primaryNormal),
               );
             } 
-            // 2. حالة النجاح (عرض البيانات من الـ Mock Repo)
             else if (state is CategorySuccess) {
               return _buildCategoriesList(state.categories);
             } 
-            // 3. حالة الخطأ
             else if (state is CategoryError) {
               return _buildErrorWidget(context, state.message);
             }
@@ -69,12 +66,12 @@ class EducationalVideosView extends StatelessWidget {
         return CategoryVideoCard(
           title: category.title,
           description: category.description,
-          icon: Icons.family_restroom,
+          iconName: category.iconName, 
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const AgeStagesView(),
+                builder: (context) => const AgeStagesView(), 
               ),
             );
           },
@@ -89,6 +86,7 @@ class EducationalVideosView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(message, style: AppTextStyles.regular16cairo),
+          4.verticalSpace,
           TextButton(
             onPressed: () => context.read<CategoryCubit>().fetchCategories(),
             child: const Text("Retry"),

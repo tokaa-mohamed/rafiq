@@ -63,7 +63,8 @@ class _NewReelViewState extends State<NewReelView> {
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: _videoController.value.isInitialized
-                    ? VideoPlayer(_videoController)
+                    ?
+                     VideoPlayer(_videoController)
                     : const Center(child: CircularProgressIndicator(color: Color(0xFF96A53A))),
               ),
             ),

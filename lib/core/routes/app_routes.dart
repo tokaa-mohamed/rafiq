@@ -16,7 +16,13 @@ import 'package:rafiq/features/auth/persentation/forget_password.dart';
 import 'package:rafiq/features/auth/persentation/otp_view.dart';
 import 'package:rafiq/features/auth/persentation/create_new_password.dart';
 import 'package:rafiq/features/auth/persentation/success_confirmation_views.dart';
+import 'package:rafiq/features/chatbot_and_assessment/domain/entities/assessment_q.dart';
+import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/assess_result.dart';
+import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/assessment_intro.dart';
+import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/assessment_qs.dart';
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/chatbot_screens.dart';
+import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/assess_cubit.dart';
+import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/assess_result_cubit.dart';
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/chatbot_cubit.dart';
 import 'package:rafiq/features/home/persentation/home_view.dart';
 import 'package:rafiq/features/home/widgets/main_layout.dart';
@@ -65,7 +71,9 @@ abstract class AppRouter {
   static const chatPage = '/ChatPage';
   static const bookSessionScreen = '/BookSessionScreen';
   static const uploadVideoMediaView = '/UploadVideoMediaView';
-
+static const String kAssessmentIntro = '/assessmentIntro';
+  static const String kAssessmentQuestions = '/assessmentQuestions';
+  static const String kAssessmentResult = '/assessmentResult';
   
   
 
@@ -165,6 +173,53 @@ GoRoute(
           return EditProfileView(user: profile);
         },
       ),
+
+GoRoute(
+        path: kAssessmentIntro,
+        name: kAssessmentIntro,
+        builder: (context, state) => const AssessmentIntroPage(),
+      ),
+
+      GoRoute(
+        path: kAssessmentQuestions,
+        name: kAssessmentQuestions,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          final String userId = extra['userId'] as String;
+          final int childAge = extra['childAge'] as int;
+
+          return BlocProvider(
+            create: (context) => getIt<AssessmentCubit>()..loadQuestions(),
+            child: AssessmentQuestionnairePage(
+              userId: userId,
+              childAge: childAge,
+            ),
+          );
+        },
+      ),
+
+GoRoute(
+        path: kAssessmentResult,
+        name: kAssessmentResult,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          final String userId = extra['userId'] as String;
+          final int childAge = extra['childAge'] as int;
+          final List<dynamic> answeredQuestions = extra['answeredQuestions'] as List<dynamic>;
+
+          return BlocProvider(
+            create: (context) => getIt<AssessmentResultCubit>()..loadResults(
+              userId: userId,
+              childAge: childAge,
+              answeredQuestions: answeredQuestions.cast<AssessmentQuestion>(),
+            ),
+            child: const AssessmentResultPage(),
+          );
+        },
+      ),
+
+
+
       GoRoute(path: ageStagesView, builder: 
       (context, state) => const AgeStagesView()),
       GoRoute(path: videosListView, builder: 

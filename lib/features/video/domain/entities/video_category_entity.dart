@@ -1,15 +1,14 @@
-import 'package:flutter/material.dart';
 
 class VideoCategoryEntity {
-  final String title;
+  final String id; 
+    final String title;
   final String description;
-  final IconData icon; 
-  final Color color;
+  final String iconName; 
 
   VideoCategoryEntity({
-    required this.title, 
-    required this.description, 
-    required this.icon,
-    required this.color,
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.iconName,
   });
 }

@@ -7,7 +7,7 @@ class DioConsumer extends ApiConsumer {
   final Dio dio;
 
   DioConsumer({required this.dio}) {
-    dio.options.baseUrl = "http://127.0.0.1:5050/"; 
+    dio.options.baseUrl = "https://ribatbackend-production.up.railway.app/"; 
     dio.interceptors.add(ApiInterceptors()); 
     dio.interceptors.add(LogInterceptor(
       requestBody: true,
@@ -26,16 +26,20 @@ class DioConsumer extends ApiConsumer {
     }
   }
 
-  @override
-  Future get(String path, {Object? data, Map<String, dynamic>? queryParameters}) async {
-    try {
-      final response = await dio.get(path, data: data, queryParameters: queryParameters);
-      return response.data;
-    } on DioException catch (e) {
-      handleDioException(e);
-    }
+@override
+Future get(String path, {Object? data, Map<String, dynamic>? queryParameters, Options? options}) async {
+  try {
+    final response = await dio.get(
+      path, 
+      data: data, 
+      queryParameters: queryParameters, 
+      options: options, 
+    );
+    return response.data;
+  } on DioException catch (e) {
+    handleDioException(e);
   }
-
+}
   @override
   Future post(String path, {Object? data, Map<String, dynamic>? queryParameters, bool isFormData = false}) async {
     try {

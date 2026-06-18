@@ -14,8 +14,10 @@ import 'package:rafiq/features/auth/persentation/logic/signup_cubit.dart';
 import 'package:rafiq/features/chatbot_and_assessment/data/datasource/dataresourceremote.dart';
 import 'package:rafiq/features/chatbot_and_assessment/domain/repos/chat_repo.dart';
 import 'package:rafiq/features/chatbot_and_assessment/domain/repos/chat_repo_impl.dart';
+import 'package:rafiq/features/chatbot_and_assessment/domain/repos/parenting_planning_repo.dart';
 import 'package:rafiq/features/chatbot_and_assessment/domain/use_cases/get_chat_history_usecase.dart';
 import 'package:rafiq/features/chatbot_and_assessment/domain/use_cases/send_message_usecase.dart';
+import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/assess_result_cubit.dart';
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/chatbot_cubit.dart';
 
 // Assessment Imports
@@ -23,6 +25,7 @@ import 'package:rafiq/features/chatbot_and_assessment/domain/repos/assessment_re
 import 'package:rafiq/features/chatbot_and_assessment/domain/repos/assessment_repo_impl.dart';
 import 'package:rafiq/features/chatbot_and_assessment/domain/use_cases/get_assessment.dart';
 import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/assess_cubit.dart';
+import 'package:rafiq/features/chatbot_and_assessment/persentation/screens/logic/planning_state_cubit.dart';
 
 // Profile & Video Imports
 import 'package:rafiq/features/profile/domain/repos/profile_repo.dart';
@@ -53,7 +56,7 @@ getIt.registerLazySingleton<AuthRepo>(() => AuthRepoImpl(apiConsumer: getIt<ApiC
   getIt.registerFactory(() => ProfileCubit(getIt<ProfileRepo>()));
 
   // --- Video Feature ---
-  getIt.registerLazySingleton<VideoRepo>(() => VideoRepoImpl());
+getIt.registerLazySingleton<VideoRepo>(() => VideoRepoImpl(api: getIt()));
   getIt.registerFactory(() => CategoryCubit(getIt<VideoRepo>()));
   getIt.registerFactory(() => VideosListCubit(getIt<VideoRepo>()));
   getIt.registerFactory(() => AdminVideoCubit(getIt<VideoRepo>()));
@@ -82,7 +85,32 @@ getIt.registerFactory(() => ChatBloc(
       getIt<GetChatHistoryUseCase>(), 
     ));
   // --- Assessment Feature ---
-  getIt.registerLazySingleton<AssessmentRepository>(() => AssessmentRepositoryImpl());
+// --- Assessment Feature ---
+// --- Assessment Feature ---
+  // 1. الـ Repository بياخد الـ Dio الأساسي عشان يكلم الـ API الحقيقية
+  getIt.registerLazySingleton<AssessmentRepository>(
+    () => AssessmentRepositoryImpl(getIt<Dio>()),
+  );
+  
+  // 2. الـ UseCase بياخد الـ Repository
   getIt.registerLazySingleton(() => GetAssessmentQuestions(getIt<AssessmentRepository>()));
-  getIt.registerFactory(() => AssessmentCubit(getIt<GetAssessmentQuestions>()));
-}
+  
+  // 3. الـ AssessmentCubit المسؤول عن الأسئلة
+  getIt.registerFactory(() => AssessmentCubit(
+    getIt<GetAssessmentQuestions>(),
+    getIt<AssessmentRepository>(),
+  ));
+
+  getIt.registerFactory(() => AssessmentResultCubit(
+    getIt<AssessmentRepository>(),
+  ));
+
+  // --- Parenting Plan Feature ---
+  getIt.registerLazySingleton<ParentingPlanRepo>(
+    () => ParentingPlanRepo(getIt<ApiConsumer>()),
+  );
+
+  getIt.registerFactory<ParentingPlanCubit>(
+    () => ParentingPlanCubit(getIt<ParentingPlanRepo>()),
+  );
+    }
