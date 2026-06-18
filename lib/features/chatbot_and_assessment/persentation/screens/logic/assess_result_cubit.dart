@@ -12,7 +12,7 @@ class AssessmentResultCubit extends Cubit<AssessmentResultState> {
 
   AssessmentResultCubit(this._assessmentRepository) 
       : super(AssessmentResultState(status: AssessmentResultStatus.initial));
-      
+
   Future<void> loadResults({
     required String userId,
     required int childAge,
@@ -21,37 +21,16 @@ class AssessmentResultCubit extends Cubit<AssessmentResultState> {
     emit(state.copyWith(status: AssessmentResultStatus.loading));
     
     try {
-      final dio = Dio();
-      
-      final response = await dio.post(
-        'https://your-backend-api.com/assessment/submit', 
-        data: {
-          "user_id": userId,
-          "child_age": childAge,
-          "answers": answeredQuestions.map((q) => {
-            "question_id": q.id, 
-            "score": q.selectedScore ?? 1, // الـ score المتسجل من اختيار المستخدم
-          }).toList(),
-          "behavior_signals": {}
-        },
+      final resultData = await _assessmentRepository.submitAssessment(
+        userId: userId,
+        childAge: childAge,
+        answeredQuestions: answeredQuestions,
       );
 
-      if (response.statusCode == 200 && response.data != null) {
-        final responseData = response.data as Map<String, dynamic>;
-        
-        if (responseData['ok'] == true) {
-          final resultData = AssessmentResult.fromJson(responseData); 
-          
-          emit(state.copyWith(
-            status: AssessmentResultStatus.loaded, 
-            result: resultData,
-          ));
-        } else {
-          emit(state.copyWith(status: AssessmentResultStatus.error, errorMessage: "Response not ok"));
-        }
-      } else {
-        emit(state.copyWith(status: AssessmentResultStatus.error, errorMessage: "Server Error"));
-      }
+      emit(state.copyWith(
+        status: AssessmentResultStatus.loaded, 
+        result: resultData,
+      ));
       
     } catch (e) {
       print("Error inside loadResults: $e");

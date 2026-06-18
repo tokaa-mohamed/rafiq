@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:rafiq/features/chatbot_and_assessment/domain/entities/assess_result.dart';
 import 'package:rafiq/features/chatbot_and_assessment/domain/entities/assessment_q.dart';
 import 'package:rafiq/features/chatbot_and_assessment/domain/repos/assessment_repo.dart';
 
@@ -34,14 +35,13 @@ class AssessmentRepositoryImpl implements AssessmentRepository {
     }
   }
 
-  @override
-  Future<void> submitAssessment({
+@override
+  Future<AssessmentResult> submitAssessment({ // 🌟 تعديل الـ return type
     required String userId,
     required int childAge,
     required List<AssessmentQuestion> answeredQuestions,
   }) async {
     try {
-      // تجهيز لستة الإجابات بالـ Format اللي الباكيند طالبها بالملي
       final List<Map<String, dynamic>> answersPayload = answeredQuestions.map((q) {
         return {
           "question_id": q.id,
@@ -56,18 +56,22 @@ class AssessmentRepositoryImpl implements AssessmentRepository {
         "behavior_signals": {}
       };
 
-      print("--- [SUBMIT ASSESSMENT] Payload: $body ---");
-
       final response = await dio.post(
-        'https://ribatbackend-production.up.railway.app/assessment/submit', // غيري المسار حسب السيرفر
+        'https://ribatbackend-production.up.railway.app/assessment/submit',
         data: body,
       );
 
-      print("--- [SUBMIT ASSESSMENT] Response Status: ${response.statusCode} ---");
-print("--- [SUBMIT ASSESSMENT] Response Data: ${response.data} ---");
+      // 🌟 التعديل الجوهري هنا: تحويل الـ response.data لـ كائن الـ AssessmentResult المظبوط فوراً
+      if (response.statusCode == 200 && response.data != null) {
+        final responseData = response.data as Map<String, dynamic>;
+        return AssessmentResult.fromJson(responseData);
+      } else {
+        throw Exception("Failed to parse result");
+      }
+
     } catch (e) {
       print("--- [SUBMIT ASSESSMENT] Error: $e ---");
       throw Exception("Failed to submit assessment");
     }
   }
-}
+  }
